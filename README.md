@@ -32,12 +32,6 @@
 # Installation
 
 ```shell
-$ pip install dirlay
-```
-
-To pretty print as tree, install with `rich` extra option:
-
-```shell
 $ pip install dirlay[rich]
 ```
 

@@ -28,13 +28,13 @@ Installation
 
         .. code:: shell
 
-            $ pip install dirlay
+            $ pip install dirlay[rich]
 
     .. tab-item:: uv
 
         .. code:: shell
 
-            $ uv add dirlay
+            $ uv add dirlay[rich]
 
 
 Use cases
