@@ -1,0 +1,24 @@
+dl.class {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+dl.exception {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+dl.function {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+dl.method {
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+}
+
+table.autosummary {
+    margin-left: 0;
+    margin-right: auto;
+}
