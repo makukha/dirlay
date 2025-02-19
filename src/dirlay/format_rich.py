@@ -7,9 +7,13 @@ if TYPE_CHECKING:
     from typing import Optional  # noqa: F401  # used in type hint comment
 
 from rich.box import ROUNDED
-from rich.console import Group
 from rich.panel import Panel
 from rich.tree import Tree
+
+try:
+    from rich.console import Group
+except ImportError:
+    from rich.group import Group
 
 
 class DefaultTheme:

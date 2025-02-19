@@ -1,5 +1,4 @@
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Any, Iterable, Iterator, Optional, Tuple, Union
 
 from typing_extensions import TypeAlias
@@ -15,7 +14,6 @@ StrNodeValue: TypeAlias = Union[None, str, dict[str, 'StrNodeValue']]
 class DirLayout:
     _tree: StrNodeTree
     _basedir: Optional[Path]
-    _tempdir: Optional[TemporaryDirectory[str]]
     _prevdir: Optional[str]
     def __init__(self, entries: Optional[NodeTree] = ...) -> None: ...
     def __eq__(self, other: Any) -> bool: ...
@@ -43,7 +41,6 @@ class DirLayout:
         show_content: bool = ...,
     ) -> None: ...
 
-def normpath(path: Path) -> Path: ...
 def walk(
     entries: StrNodeTree,
     prefix: Optional[Path] = ...,

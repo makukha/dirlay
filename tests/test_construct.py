@@ -1,12 +1,10 @@
 import sys
 from unittest import TestCase, skipUnless
 
-try:
-    from pathlib import Path
-except ImportError:
-    from builtins import NotImplemented as Path
-
 from dirlay import DirLayout
+from dirlay.optional import pathlib
+
+Path = pathlib.Path
 
 
 class TestConstructor(TestCase):

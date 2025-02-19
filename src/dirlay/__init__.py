@@ -3,7 +3,7 @@ try:
 except ImportError:
     from pathlib2 import Path  # type: ignore[import-not-found,no-redef]
 
-from .dir import DirLayout
+from dirlay.dir import DirLayout
 
 
 __version__ = '0.0.0'

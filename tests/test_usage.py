@@ -1,9 +1,11 @@
+# encoding: utf-8
 from doctest import ELLIPSIS
-from unittest import TestCase
+from unittest import TestCase, skipIf
 
 from doctestcase import doctestcase
 
 from dirlay import DirLayout
+from dirlay.optional import rich
 
 
 case = doctestcase(globals={'DirLayout': DirLayout}, options=ELLIPSIS)
@@ -66,6 +68,7 @@ class UsageChdir(TestCase):
     """
 
 
+@skipIf(rich is None, 'rich not available')
 @case
 class UsageTree(TestCase):
     """

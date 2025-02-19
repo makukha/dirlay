@@ -119,6 +119,7 @@ select = ["E4", "E7", "E9", "F", "B", "S"]
 per-file-ignores."tests/**/*.py" = [
   "S101",  # Use of `assert` detected
   "S102",  # Use of `exec` detected
+  "S108",  # Probable insecure usage of temporary file or directory
   "S603",  # `subprocess` call: check for execution of untrusted input
 ]
 [tool.ruff.format]

@@ -12,11 +12,11 @@ class TestFilesystem(TestCase):
             path = layout.basedir / path
             self.assertTrue(path.exists())
             if value is not None:
-                with open(path, 'rt') as f:
+                with open(str(path), 'rt') as f:
                     self.assertEqual(value, f.read())
 
     def test_remove_not_instantiated(self):  # type: () -> None
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(RuntimeError):
             DirLayout({'c.txt': 'c'}).rmtree()
 
     def test_create_remove_tempdir(self):  # type: () -> None
@@ -33,6 +33,7 @@ class TestFilesystem(TestCase):
     def test_create_remove_userdir(self):  # type: () -> None
         layout = DirLayout({'a': {'b': {'c.txt': 'c'}}})
         # instantiate in directory provided by user
+        os.chdir('/tmp')
         layout.mktree(uuid4().hex)
         assert layout.basedir is not None  # type hint
         self.assertFilesystem(layout)
@@ -42,12 +43,12 @@ class TestFilesystem(TestCase):
         self.assertFalse(basedir.exists())
 
     def test_chdir_not_instantiated(self):  # type: () -> None
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(RuntimeError):
             DirLayout({'c.txt': 'c'}).chdir('.')
 
     def test_chdir_absolute(self):  # type: () -> None
         layout = DirLayout({'c.txt': 'c'})
-        with self.assertRaises(FileNotFoundError):
+        with self.assertRaises(RuntimeError):
             layout.chdir(os.getcwd())
 
     def test_chdir(self):  # type: () -> None

@@ -3,7 +3,7 @@ try:
 except ImportError:
     Tree = None  # type: ignore[assignment,misc]  # assign to type
 
-from .dir import DirLayout
+from dirlay.dir import DirLayout
 
 def to_tree(
     layout: DirLayout,

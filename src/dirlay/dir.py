@@ -1,12 +1,15 @@
 import os
 import shutil
-from tempfile import TemporaryDirectory
+import sys
+from tempfile import mkdtemp
 
-from .optional import pathlib, rich
+from dirlay.optional import pathlib, rich
 
 if rich is not None:
-    from rich import print as rich_print
-    from .format_rich import to_tree
+    import rich
+    from dirlay.format_rich import to_tree
+
+    rich_print = getattr(rich, 'print')  # noqa: B009  # Python 2 compatibility
 else:
     rich_print = None
     to_tree = None
@@ -44,7 +47,6 @@ class DirLayout:
             for k, v in entries.items():
                 self._add_path(self._tree, None, k, v, exist_ok=False)
         self._basedir = None
-        self._tempdir = None
         self._prevdir = None
 
     def __eq__(self, other):
@@ -56,8 +58,8 @@ class DirLayout:
     @classmethod
     def _add_path(cls, base_dict, base_path, path, value, exist_ok=False):
         # validate
-        base_path = Path('.') if base_path is None else normpath(Path(base_path))
-        path = normpath(Path(path))
+        base_path = Path('.' if base_path is None else os.path.normpath(str(base_path)))
+        path = Path(os.path.normpath(str(path)))
         if base_path.is_absolute():
             raise ValueError('Absolute path not allowed: "{}"'.format(base_path))
         if path.is_absolute():
@@ -99,7 +101,9 @@ class DirLayout:
         ret = {}
 
         def append_entries(base, entries):  # type: (dict[str, Any], dict[Any, Any]) -> None
-            for path in sorted(entries.keys()):
+            paths = list(entries.keys())
+            paths.sort()
+            for path in paths:
                 k = str(path)
                 v = entries[path]
                 if isinstance(v, dict):
@@ -126,12 +130,12 @@ class DirLayout:
         """
         # prepare
         if basedir is None:
-            self._tempdir = TemporaryDirectory()
-            self._basedir = Path(self._tempdir.name)
+            self._basedir = Path(mkdtemp())
         else:
             basedir = Path(basedir)
-            if self._tempdir is None and basedir.exists():
+            if basedir.exists():
                 raise FileExistsError('Path already exists: {}'.format(basedir))
+            basedir.mkdir(parents=True, exist_ok=True)
             self._basedir = basedir.resolve()
         # create
         for path, value in walk(self._tree):
@@ -139,7 +143,10 @@ class DirLayout:
             parent = p if value is None else p.parent
             parent.mkdir(parents=True, exist_ok=True)
             if value is not None:
-                p.write_text(value)
+                if sys.version_info > (3,):
+                    p.write_text(value)
+                else:
+                    p.write_text(value.decode('utf-8'))
 
     def rmtree(self):
         """
@@ -150,13 +157,10 @@ class DirLayout:
         if self._prevdir is not None:
             os.chdir(self._prevdir)
             self._prevdir = None
-        # cleanup tempdir if needed
-        if self._tempdir is not None:
-            self._tempdir.cleanup()
-            self._tempdir = None
         # cleanup base if needed
-        if os.path.exists(self._basedir):
-            shutil.rmtree(self._basedir)
+        basedir = str(self._basedir)
+        if os.path.exists(basedir):
+            shutil.rmtree(basedir)
         self._basedir = None
 
     # current directory operations
@@ -183,15 +187,11 @@ class DirLayout:
 
     def _assert_tree_created(self):
         if self._basedir is None:
-            raise FileNotFoundError('Directory tree must be created')
+            raise RuntimeError('Directory tree must be created')
 
     # formatting
 
-    def print_tree(
-        self,
-        show_basedir: bool = False,
-        show_content: bool = False,
-    ):
+    def print_tree(self, show_basedir=False, show_content=False):
         if rich is None:
             raise NotImplementedError(
                 'Optional dependency rich is required; install as dirlay[rich]'
@@ -203,10 +203,6 @@ class DirLayout:
 # internal helpers
 
 
-def normpath(path):
-    return path.resolve().relative_to(Path('.').resolve())
-
-
 def walk(entries, prefix=None):
     if prefix is None:
         prefix = Path('.')
@@ -216,7 +212,8 @@ def walk(entries, prefix=None):
         elif isinstance(v, dict):
             next_prefix = Path(prefix, name)
             yield (next_prefix, None)
-            yield from walk(v, prefix=next_prefix)
+            for x in walk(v, prefix=next_prefix):  # syntax supported by Python 2
+                yield x
         elif isinstance(v, (str, Path)):
             yield (Path(prefix, name), v)
         else:
