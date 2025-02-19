@@ -71,15 +71,15 @@ pypi-publish: build
 # run pre-commit hook
 [group('manage')]
 pre-commit:
-    just lint
-    just docs
+    @just lint
+    @just docs
 
 # run pre-merge
 [group('manage')]
 pre-merge:
-    just lint
-    just docs
-    just test
+    @just lint
+    @just docs
+    @just test
 
 # merge
 [group('manage')]
