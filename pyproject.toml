@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dirlay"
-description = ""
+description = "Directory layout object for testing and documentation"
 license = {text = "MIT"}
 readme = "README.md"
 urls.Documentation = "https://dirlay.readthedocs.io"
@@ -12,7 +12,7 @@ urls.Homepage = "https://github.com/makukha/dirlay"
 urls.Repository = "https://github.com/makukha/dirlay"
 urls.Issues = "https://github.com/makukha/dirlay"
 urls.Changelog = "https://github.com/makukha/dirlay"
-keywords = []
+keywords = ["directory", "tree", "structure", "layout"]
 classifiers = [
   # see https://pypi.org/classifiers/
   "Development Status :: 4 - Beta",
