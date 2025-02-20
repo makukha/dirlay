@@ -1,0 +1,140 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dirlay"
+description = ""
+license = {text = "MIT"}
+readme = "README.md"
+urls.Documentation = "https://dirlay.readthedocs.io"
+urls.Homepage = "https://github.com/makukha/dirlay"
+urls.Repository = "https://github.com/makukha/dirlay"
+urls.Issues = "https://github.com/makukha/dirlay"
+urls.Changelog = "https://github.com/makukha/dirlay"
+keywords = []
+classifiers = [
+  # see https://pypi.org/classifiers/
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 2",
+  "Programming Language :: Python :: 2.7",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.5",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Documentation",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Libraries",
+  "Typing :: Typed",
+]
+dynamic = ["version"]
+
+requires-python = ">=2.7,!=3.0,!=3.1,!=3.2,!=3.3,!=3.4"
+dependencies = [
+  "pathlib2>=2.3.7.post1 ; python_version < '3'",
+]
+
+[project.optional-dependencies]
+rich = [
+  "rich>=9.7 ; python_version >= '3.6'",  # the first one with rich.tree
+]
+
+[dependency-groups]
+dev = [
+  "bump-my-version>=0.32 ; python_version >= '3.12'",
+  "caseutil>=0.7; python_version>='3.12'",
+  "docsub>=0.9 ; python_version >= '3.12'",
+  "genbadge[tests,coverage]>=1.1 ; python_version >= '3.12'",
+  "mypy>=1.15 ; python_version >= '3.12'",
+  "ruff>=0.9 ; python_version >= '3.12'",
+  "scriv>=1.5 ; python_version >= '3.12'",
+]
+sphinx = [
+  "furo ; python_version >= '3.12'",
+  "myst-parser ; python_version >= '3.12'",
+  "sphinx ; python_version >= '3.12'",
+  "sphinx-copybutton ; python_version >= '3.12'",
+  "sphinx-design ; python_version >= '3.12'",
+  "sphinx-sitemap ; python_version >= '3.12'",
+]
+test = [
+  "doctestcase>=0.2",
+  "pytest>=8.3 ; python_version >= '3.12'",
+]
+
+# bump-my-version
+
+[tool.bumpversion]
+current_version = "0.1.0"
+allow_dirty = true
+files = [
+  {filename = "docs/badges.md"},
+  {filename = "docs/sphinx/conf.py"},
+  {filename = "src/dirlay/__init__.py"},
+]
+
+# hatch
+
+[tool.hatch.build]
+exclude = [
+  ".jist",
+  "Justfile",
+  "Makefile",
+  "compose.yml",
+]
+[tool.hatch.version]
+path = "src/dirlay/__init__.py"
+
+# mypy
+
+[tool.mypy]
+exclude = "tests/usage"
+incremental = false
+python_version = "3.9"
+strict = true
+[[tool.mypy.overrides]]
+module = "tests.*"
+allow_incomplete_defs = true
+allow_untyped_defs = true
+
+# ruff
+
+[tool.ruff]
+exclude = [".jist"]
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B", "S"]
+per-file-ignores."tests/**/*.py" = [
+  "S101",  # Use of `assert` detected
+  "S102",  # Use of `exec` detected
+  "S108",  # Probable insecure usage of temporary file or directory
+  "S603",  # `subprocess` call: check for execution of untrusted input
+]
+[tool.ruff.format]
+quote-style = "single"
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
+
+# scriv
+
+[tool.scriv]
+categories = ["Security ⚠️", "Breaking 🔥", "Removed 💨", "Deprecated ❄️", "Added 🌿", "Changed", "Fixed", "Docs", "Misc"]
+entry_title_template = "[{% if version %}{{ version }}](https://github.com/makukha/dirlay/releases/tag/v{{ version }}) — {% endif %}{{ date.strftime('%Y-%m-%d') }}"
+ghrel_template = "command: just gh-issue-title"  # abuse config option to pass default message
+format = "md"
+fragment_directory = "NEWS.d"
+md_header_level = "2"
+new_fragment_template = "file: .jist/scriv.new_fragment.md.j2"
+version = "command: just version"
