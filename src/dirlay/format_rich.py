@@ -26,7 +26,21 @@ class DefaultTheme:
 
 def to_tree(layout, show_basedir=False, show_content=False):
     """
-    Return :external+rich:py:obj:`~rich.tree.Tree` object representing the directory layout.
+    Return :external+rich:py:obj:`~rich.tree.Tree` object representing
+    the directory layout. See :ref:`Use cases` for examples.
+
+    Args:
+        layout (`~dirlay.dir.DirLayout`):
+            directory layout to be formatted.
+        show_basedir (``bool``):
+            whether to show real base directory name instead of ``'.'``; defaults to
+            ``False``.
+        show_content (``bool``):
+            whether to include file content in the box under the file name; defaults to
+            ``False``.
+
+    Returns:
+        ``None``
     """
     if Tree is NotImplemented:
         raise NotImplementedError(

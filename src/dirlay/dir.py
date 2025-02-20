@@ -19,7 +19,7 @@ Path = pathlib.Path
 
 class DirLayout:
     """
-    Directory layout class. See :ref:`Use cases` for details.
+    Directory layout class. See :ref:`Use cases` for examples.
     """
 
     def __init__(self, entries=None):
@@ -50,6 +50,12 @@ class DirLayout:
         self._prevdir = None
 
     def __eq__(self, other):
+        """
+        Two directory layouts are equal if they have:
+
+        - equal files and directories (both path and content)
+        - equal `~dirlay.dir.DirLayout.basedir`
+        """
         return self._basedir == other._basedir and self._tree == other._tree
 
     def __iter__(self):
@@ -120,13 +126,29 @@ class DirLayout:
     @property
     def basedir(self):
         """
-        Base filesystem directory.
+        Base filesystem directory as `~pathlib.Path` object.
+
+        When ``None``, directory layout object is not instantiated (not created on the
+        file system).
         """
         return None if self._basedir is None else Path(self._basedir)
 
     def mktree(self, basedir=None):
         """
         Instantiate layout in given or temporary directory.
+
+        Args:
+            basedir (`~pathlib.Path` | ``str`` | ``None``):
+                path to base directory under which directories and files will be
+                created; if ``None`` (default), temporary directory is used. After the
+                directory structure is created, ``basedir`` value is available as
+                `~dirlay.dir.DirLayout.basedir` attribute.
+
+        Returns:
+            `None`
+
+        Raises:
+            FileExistsError: if ``basedir`` path already exists.
         """
         # prepare
         if basedir is None:
@@ -151,6 +173,9 @@ class DirLayout:
     def rmtree(self):
         """
         Remove directory and all its contents.
+
+        Returns:
+            ``None``
         """
         self._assert_tree_created()
         # chdir back if needed
@@ -168,6 +193,17 @@ class DirLayout:
     def chdir(self, path=None):
         """
         Change current directory to a subdirectory relative to layout base.
+
+        Args:
+            path (`~pathlib.Path` | ``str`` | ``None``):
+                relative path to subdirectory to be chdir'ed to; if ``None`` (default),
+                `~dirlay.dir.DirLayout.basedir` will be used.
+
+        Returns:
+            `None`
+
+        Raises:
+            ValueError: if ``path`` is absolute.
         """
         # validate
         self._assert_tree_created()
@@ -182,6 +218,9 @@ class DirLayout:
     def getcwd(self):
         """
         Get current working directory.
+
+        Returns:
+            `~pathlib.Path`
         """
         return Path.cwd().resolve()
 
@@ -192,6 +231,21 @@ class DirLayout:
     # formatting
 
     def print_tree(self, show_basedir=False, show_content=False):
+        """
+        Print as :external+rich:py:obj:`~rich.tree.Tree`. See :ref:`Print as tree`
+        for examples.
+
+        Args:
+            show_basedir (``bool``):
+                whether to show real base directory name instead of ``'.'``; defaults to
+                ``False``.
+            show_content (``bool``):
+                whether to include file content in the box under the file name; defaults to
+                ``False``.
+
+        Returns:
+            ``None``
+        """
         if rich is None:
             raise NotImplementedError(
                 'Optional dependency rich is required; install as dirlay[rich]'
