@@ -8,3 +8,10 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.1.0'></a>
+## [0.1.0](https://github.com/makukha/dirlay/releases/tag/v0.1.0) — 2025-02-20
+
+***Added 🌿***
+
+- Initial release
+

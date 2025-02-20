@@ -78,11 +78,11 @@ test = [
 # bump-my-version
 
 [tool.bumpversion]
-current_version = "0.0.0"
+current_version = "0.1.0"
 allow_dirty = true
 files = [
   {filename = "docs/badges.md"},
-  {filename = "docs/conf.py"},
+  {filename = "docs/sphinx/conf.py"},
   {filename = "src/dirlay/__init__.py"},
 ]
 
