@@ -37,8 +37,9 @@ class DirLayout:
     def rmtree(self) -> None: ...
     def print_tree(
         self,
-        show_basedir: bool = ...,
+        real_basedir: bool = ...,
         show_content: bool = ...,
+        **kwargs: Any,
     ) -> None: ...
 
 def walk(

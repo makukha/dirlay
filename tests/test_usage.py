@@ -1,11 +1,11 @@
 # encoding: utf-8
 from doctest import ELLIPSIS
+import sys
 from unittest import TestCase, skipIf
 
 from doctestcase import doctestcase
 
 from dirlay import DirLayout
-from dirlay.optional import rich
 
 
 case = doctestcase(globals={'DirLayout': DirLayout}, options=ELLIPSIS)
@@ -68,7 +68,7 @@ class UsageChdir(TestCase):
     """
 
 
-@skipIf(rich is None, 'rich not available')
+@skipIf(sys.version_info < (3, 6), 'rich not supported')
 @case
 class UsageTree(TestCase):
     """
@@ -82,8 +82,10 @@ class UsageTree(TestCase):
         │   └── 📄 c.txt
         └── 📄 d.txt
 
+    Display `basedir` path and file contents:
+
     >>> layout.mktree()
-    >>> layout.print_tree(show_basedir=True, show_content=True)
+    >>> layout.print_tree(real_basedir=True, show_content=True)
     📂 /tmp/...
     └── 📂 a
         ├── 📂 b
@@ -95,4 +97,18 @@ class UsageTree(TestCase):
             ╭─────╮
             │ ddd │
             ╰─────╯
+
+    Extra keyword aguments will be passed through to `rich.tree.Tree`:
+
+    >>> layout.print_tree(real_basedir=True, show_content=True, hide_root=True)
+    📂 a
+    ├── 📂 b
+    │   └── 📄 c.txt
+    │       ╭─────╮
+    │       │ ccc │
+    │       ╰─────╯
+    └── 📄 d.txt
+        ╭─────╮
+        │ ddd │
+        ╰─────╯
     """

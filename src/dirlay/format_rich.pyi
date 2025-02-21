@@ -1,3 +1,5 @@
+from typing import Any
+
 try:
     from rich.tree import Tree  # type: ignore[import-not-found,unused-ignore]
 except ImportError:
@@ -7,6 +9,7 @@ from dirlay.dir import DirLayout
 
 def to_tree(
     layout: DirLayout,
-    show_basedir: bool = ...,
+    real_basedir: bool = ...,
     show_content: bool = ...,
+    **kwargs: Any,
 ) -> Tree: ...
