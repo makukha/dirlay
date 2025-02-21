@@ -230,7 +230,7 @@ class DirLayout:
 
     # formatting
 
-    def print_tree(self, real_basedir=False, show_content=False):
+    def print_tree(self, real_basedir=False, show_content=False, **kwargs):
         """
         Print as :external+rich:py:obj:`~rich.tree.Tree`. See :ref:`Print as tree`
         for examples.
@@ -242,6 +242,8 @@ class DirLayout:
             show_content (``bool``):
                 whether to include file content in the box under the file name; defaults to
                 ``False``.
+            kwargs (``Any``):
+                optional keyword arguments passed to `~rich.tree.Tree`.
 
         Returns:
             ``None``
@@ -250,7 +252,9 @@ class DirLayout:
             raise NotImplementedError(
                 'Optional dependency rich is required; install as dirlay[rich]'
             )
-        tree = to_tree(self, real_basedir=real_basedir, show_content=show_content)
+        tree = to_tree(
+            self, real_basedir=real_basedir, show_content=show_content, **kwargs
+        )
         rich_print(tree)
 
 

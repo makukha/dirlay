@@ -24,7 +24,7 @@ class DefaultTheme:
     content_box = ROUNDED
 
 
-def to_tree(layout, real_basedir=False, show_content=False):
+def to_tree(layout, real_basedir=False, show_content=False, **kwargs):
     """
     Return :external+rich:py:obj:`~rich.tree.Tree` object representing
     the directory layout. See :ref:`Use cases` for examples.
@@ -38,6 +38,8 @@ def to_tree(layout, real_basedir=False, show_content=False):
         show_content (``bool``):
             whether to include file content in the box under the file name; defaults to
             ``False``.
+        kwargs (``Any``):
+            optional keyword arguments passed to `~rich.tree.Tree`.
 
     Returns:
         ``None``
@@ -55,7 +57,7 @@ def to_tree(layout, real_basedir=False, show_content=False):
         return '{}{}'.format(icon, path)
 
     basedir = str(layout.basedir) or '.'
-    tree = Tree(nodename(basedir if real_basedir else '.', None))
+    tree = Tree(nodename(basedir if real_basedir else '.', None), **kwargs)
     nodes = {'.': tree}
 
     for path, value in layout:

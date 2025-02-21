@@ -39,6 +39,7 @@ class DirLayout:
         self,
         real_basedir: bool = ...,
         show_content: bool = ...,
+        **kwargs: Any,
     ) -> None: ...
 
 def walk(

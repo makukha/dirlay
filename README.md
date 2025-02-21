@@ -126,7 +126,11 @@ PosixPath('/tmp')
     ├── 📂 b
     │   └── 📄 c.txt
     └── 📄 d.txt
+```
 
+Display `basedir` path and file contents:
+
+```pycon
 >>> layout.mktree()
 >>> layout.print_tree(real_basedir=True, show_content=True)
 📂 /tmp/...
@@ -140,6 +144,22 @@ PosixPath('/tmp')
         ╭─────╮
         │ ddd │
         ╰─────╯
+```
+
+Extra keyword aguments will be passed through to `rich.tree.Tree`:
+
+```pycon
+>>> layout.print_tree(real_basedir=True, show_content=True, hide_root=True)
+📂 a
+├── 📂 b
+│   └── 📄 c.txt
+│       ╭─────╮
+│       │ ccc │
+│       ╰─────╯
+└── 📄 d.txt
+    ╭─────╮
+    │ ddd │
+    ╰─────╯
 ```
 
 <!-- docsub: end -->
