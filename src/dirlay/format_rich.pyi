@@ -7,6 +7,6 @@ from dirlay.dir import DirLayout
 
 def to_tree(
     layout: DirLayout,
-    show_basedir: bool = ...,
+    real_basedir: bool = ...,
     show_content: bool = ...,
 ) -> Tree: ...

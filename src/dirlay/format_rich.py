@@ -24,7 +24,7 @@ class DefaultTheme:
     content_box = ROUNDED
 
 
-def to_tree(layout, show_basedir=False, show_content=False):
+def to_tree(layout, real_basedir=False, show_content=False):
     """
     Return :external+rich:py:obj:`~rich.tree.Tree` object representing
     the directory layout. See :ref:`Use cases` for examples.
@@ -32,7 +32,7 @@ def to_tree(layout, show_basedir=False, show_content=False):
     Args:
         layout (`~dirlay.dir.DirLayout`):
             directory layout to be formatted.
-        show_basedir (``bool``):
+        real_basedir (``bool``):
             whether to show real base directory name instead of ``'.'``; defaults to
             ``False``.
         show_content (``bool``):
@@ -55,7 +55,7 @@ def to_tree(layout, show_basedir=False, show_content=False):
         return '{}{}'.format(icon, path)
 
     basedir = str(layout.basedir) or '.'
-    tree = Tree(nodename(basedir if show_basedir else '.', None))
+    tree = Tree(nodename(basedir if real_basedir else '.', None))
     nodes = {'.': tree}
 
     for path, value in layout:

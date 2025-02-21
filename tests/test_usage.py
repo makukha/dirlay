@@ -83,7 +83,7 @@ class UsageTree(TestCase):
         └── 📄 d.txt
 
     >>> layout.mktree()
-    >>> layout.print_tree(show_basedir=True, show_content=True)
+    >>> layout.print_tree(real_basedir=True, show_content=True)
     📂 /tmp/...
     └── 📂 a
         ├── 📂 b
