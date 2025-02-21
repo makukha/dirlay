@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.2.0'></a>
+## [0.2.0](https://github.com/makukha/dirlay/releases/tag/v0.2.0) — 2025-02-21
+
+***Breaking 🔥***
+
+- Renamed argument `show_basedir` to `real_basedir`
+
+***Added 🌿***
+
+- Optional `kwargs` to `DirLayout.print_tree` and `to_tree`
+
 <a id='changelog-0.1.0'></a>
 ## [0.1.0](https://github.com/makukha/dirlay/releases/tag/v0.1.0) — 2025-02-20
 
