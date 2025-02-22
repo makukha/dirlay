@@ -85,6 +85,7 @@ pre-merge:
 [group('manage')]
 merge:
     just pre-merge
+    just confirm "Commit changes"
     just gh-push
     just gh-pr
 

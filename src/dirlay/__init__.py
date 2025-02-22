@@ -54,7 +54,8 @@ class DirLayout:
         if entries is not None:
             self.add(entries)
         self._basedir = None
-        self._prevdir = None
+        self._original_cwd = None
+        self._remove_basedir = False
 
     def __contains__(self, path):
         """
@@ -119,7 +120,7 @@ class DirLayout:
         Exit context manager.
         """
         if self.basedir is not None:
-            self.rmtree()
+            self.destroy()
 
     @classmethod
     def _add_path(cls, base_dict, base_path, path, value, exist_ok=False):
@@ -214,7 +215,7 @@ class DirLayout:
         """
         return None if self._basedir is None else Path(self._basedir)
 
-    def mktree(self, basedir=None):
+    def create(self, basedir=None, chdir=None):
         """
         Instantiate layout in given or temporary directory.
 
@@ -224,6 +225,8 @@ class DirLayout:
                 created; if ``None`` (default), temporary directory is used. After the
                 directory structure is created, ``basedir`` value is available as
                 `~dirlay.DirLayout.basedir` attribute.
+            chdir (`~pathlib.Path` | ``str`` | ``None``):
+                path to change the current directory to, if needed.
 
         Returns:
             `None`
@@ -234,11 +237,12 @@ class DirLayout:
         # prepare
         if basedir is None:
             self._basedir = Path(mkdtemp())
+            self._remove_basedir = True
         else:
             basedir = Path(basedir)
-            if basedir.exists():
-                raise FileExistsError('Path already exists: {}'.format(basedir))
-            basedir.mkdir(parents=True, exist_ok=True)
+            if not basedir.exists():
+                basedir.mkdir(parents=True, exist_ok=True)
+                self._remove_basedir = True
             self._basedir = basedir.resolve()
         # create
         for path, value in walk(self._tree):
@@ -250,23 +254,34 @@ class DirLayout:
                     p.write_text(value)
                 else:
                     p.write_text(value.decode('utf-8'))
+        # chdir
+        if chdir is not None:
+            self.chdir(chdir)
+        #
+        return self
 
-    def rmtree(self):
+    def destroy(self):
         """
         Remove directory and all its contents.
+
+        If ``basedir`` argument wath passed to `create`, and `basedir` was created,
+        it will be removed. If ``chdir`` argument was passed, current working directory
+        will be restored to the original one.
 
         Returns:
             ``None``
         """
         self._assert_tree_created()
         # chdir back if needed
-        if self._prevdir is not None:
-            os.chdir(self._prevdir)
-            self._prevdir = None
-        # cleanup base if needed
-        basedir = str(self._basedir)
-        if os.path.exists(basedir):
-            shutil.rmtree(basedir)
+        if self._original_cwd is not None:
+            os.chdir(self._original_cwd)
+            self._original_cwd = None
+        # remove basedir if needed
+        if self._remove_basedir:
+            p = str(self._basedir)
+            if os.path.exists(p):
+                shutil.rmtree(p)
+            self._remove_basedir = False
         self._basedir = None
 
     # current directory operations
@@ -292,8 +307,8 @@ class DirLayout:
         if path.is_absolute():
             raise ValueError('Absolute path not allowed: "{}"'.format(path))
         # chdir
-        if self._prevdir is None:
-            self._prevdir = os.getcwd()
+        if self._original_cwd is None:
+            self._original_cwd = os.getcwd()
         os.chdir(str(self.basedir / path))
 
     def getcwd(self):
