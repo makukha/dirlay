@@ -1,5 +1,6 @@
 <!-- docsub: begin -->
 <!-- docsub: x toc tests/test_usage.py 'Usage.*' -->
+* [TL;DR](#tl-dr)
 * [Create directory layout tree](#create-directory-layout-tree)
 * [Chdir to subdirectory](#chdir-to-subdirectory)
 * [Print as tree](#print-as-tree)
@@ -11,7 +12,40 @@
 
 <!-- docsub: begin -->
 <!-- docsub: x cases tests/test_usage.py 'Usage.*' -->
+## TL;DR
+
+```pycon
+>>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}}
+>>> layout['a/b/c.txt']
+PosixPath('a/b/c.txt')
+>>> 'z.txt' in layout
+False
+```
+
+Instantiate on the file system (in temporary directory by default) and remove when
+exiting the context.
+
+```pycon
+>>> with layout:
+...     layout.mktree()
+...     str(layout['a/b/c.txt'].read_text())
+'ccc'
+```
+
+Optionally, change current working directory to a layout subdir, and change back
+after context manager is exited.
+
+```pycon
+>>> with layout:
+...     layout.mktree()
+...     layout.chdir('a/b')
+...     str(Path('c.txt').read_text())
+'ccc'
+```
+
 ## Create directory layout tree
+
+Directory layout can be constructed from dict:
 
 ```pycon
 >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
@@ -38,7 +72,7 @@ And remove when not needed anymore:
 When layout is instantiated, current directory remains unchanged:
 
 ```pycon
->>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
+>>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc'}}
 >>> layout.mktree()
 >>> layout.getcwd()
 PosixPath('/tmp')

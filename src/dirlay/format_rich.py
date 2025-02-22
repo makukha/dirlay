@@ -30,7 +30,7 @@ def to_tree(layout, real_basedir=False, show_content=False, **kwargs):
     the directory layout. See :ref:`Use cases` for examples.
 
     Args:
-        layout (`~dirlay.dir.DirLayout`):
+        layout (`~dirlay.DirLayout`):
             directory layout to be formatted.
         real_basedir (``bool``):
             whether to show real base directory name instead of ``'.'``; defaults to

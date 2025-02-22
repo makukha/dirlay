@@ -5,16 +5,51 @@ from unittest import TestCase, skipIf
 
 from doctestcase import doctestcase
 
-from dirlay import DirLayout
+from dirlay import DirLayout, Path
 
 
-case = doctestcase(globals={'DirLayout': DirLayout}, options=ELLIPSIS)
+case = doctestcase(
+    globals={'DirLayout': DirLayout, 'Path': Path},
+    options=ELLIPSIS,
+)
+
+
+@case
+class UsageTLDR(TestCase):
+    """
+    TL;DR
+
+    >>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}}
+    >>> layout['a/b/c.txt']
+    PosixPath('a/b/c.txt')
+    >>> 'z.txt' in layout
+    False
+
+    Instantiate on the file system (in temporary directory by default) and remove when
+    exiting the context.
+
+    >>> with layout:
+    ...     layout.mktree()
+    ...     str(layout['a/b/c.txt'].read_text())
+    'ccc'
+
+    Optionally, change current working directory to a layout subdir, and change back
+    after context manager is exited.
+
+    >>> with layout:
+    ...     layout.mktree()
+    ...     layout.chdir('a/b')
+    ...     str(Path('c.txt').read_text())
+    'ccc'
+    """
 
 
 @case
 class UsageCreate(TestCase):
     """
     Create directory layout tree
+
+    Directory layout can be constructed from dict:
 
     >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
     >>> layout.basedir is None
@@ -39,7 +74,7 @@ class UsageChdir(TestCase):
 
     When layout is instantiated, current directory remains unchanged:
 
-    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
+    >>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc'}}
     >>> layout.mktree()
     >>> layout.getcwd()
     PosixPath('/tmp')

@@ -83,7 +83,7 @@ allow_dirty = true
 files = [
   {filename = "docs/badges.md"},
   {filename = "docs/sphinx/conf.py"},
-  {filename = "src/dirlay/__init__.py"},
+  {filename = "src/dirlay/__version__.py"},
 ]
 
 # hatch
@@ -96,7 +96,7 @@ exclude = [
   "compose.yml",
 ]
 [tool.hatch.version]
-path = "src/dirlay/__init__.py"
+path = "src/dirlay/__version__.py"
 
 # mypy
 

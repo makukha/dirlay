@@ -4,9 +4,9 @@ API Reference
 Directory layout
 ----------------
 
-.. automodule:: dirlay.dir
+.. autoclass:: dirlay.DirLayout
     :members:
-    :special-members: __eq__, __iter__
+    :special-members: __contains__, __eq__, __getitem__, __iter__, __or__, __ior__, __enter__, __exit__
 
 Formatting
 ----------
