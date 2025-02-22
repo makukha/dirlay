@@ -281,7 +281,7 @@ wheels = [
 
 [[package]]
 name = "dirlay"
-version = "0.2.0"
+version = "0.2.1"
 source = { editable = "." }
 dependencies = [
     { name = "pathlib2", marker = "python_full_version < '3'" },
