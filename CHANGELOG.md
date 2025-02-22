@@ -8,6 +8,17 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.2.1'></a>
+## [0.2.1](https://github.com/makukha/dirlay/releases/tag/v0.2.1) — 2025-02-22
+
+***Added 🌿***
+
+- New methods to append entries: `__or__()`, `__ior__()`, `add()`, `update()`
+- New method `copy()` to get a deep copy
+- Method `__contains__()` to check whether directory layout object contains specific path
+- Item access with `__getitem__()` returning `Path` object
+- Context manager protocol `__enter__()` and `__exit__()` that calls `rmtree()` if `mktree()` was called earlier
+
 <a id='changelog-0.2.0'></a>
 ## [0.2.0](https://github.com/makukha/dirlay/releases/tag/v0.2.0) — 2025-02-21
 
