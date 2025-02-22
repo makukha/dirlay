@@ -19,7 +19,7 @@ class UsageTLDR(TestCase):
     """
     TL;DR
 
-    >>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}}
+    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
     >>> layout['a/b/c.txt']
     PosixPath('a/b/c.txt')
     >>> 'z.txt' in layout
@@ -28,17 +28,14 @@ class UsageTLDR(TestCase):
     Instantiate on the file system (in temporary directory by default) and remove when
     exiting the context.
 
-    >>> with layout:
-    ...     layout.mktree()
+    >>> with layout.create():
     ...     str(layout['a/b/c.txt'].read_text())
     'ccc'
 
     Optionally, change current working directory to a layout subdir, and change back
     after context manager is exited.
 
-    >>> with layout:
-    ...     layout.mktree()
-    ...     layout.chdir('a/b')
+    >>> with layout.create(chdir='a/b'):
     ...     str(Path('c.txt').read_text())
     'ccc'
     """
@@ -54,13 +51,14 @@ class UsageCreate(TestCase):
     >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
     >>> layout.basedir is None
     True
-    >>> layout.mktree()
+    >>> layout.create()
+    <dirlay.DirLayout ...>
     >>> layout.basedir
     PosixPath('/tmp/...')
 
     And remove when not needed anymore:
 
-    >>> layout.rmtree()
+    >>> layout.destroy()
     """
 
 
@@ -74,13 +72,14 @@ class UsageChdir(TestCase):
 
     When layout is instantiated, current directory remains unchanged:
 
-    >>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc'}}
-    >>> layout.mktree()
+    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
+    >>> layout.create()
+    <dirlay.DirLayout ...>
     >>> layout.getcwd()
     PosixPath('/tmp')
 
     On first `chdir`, initial working directory is stored internally, and will be
-    restored on `rmtree`. Without argument, `chdir` sets current directory to
+    restored on `destroy`. Without argument, `chdir` sets current directory to
     `layout.basedir`.
 
     >>> layout.basedir
@@ -97,7 +96,7 @@ class UsageChdir(TestCase):
 
     When directory is removed, current directory is restored:
 
-    >>> layout.rmtree()
+    >>> layout.destroy()
     >>> layout.getcwd()
     PosixPath('/tmp')
     """
@@ -119,7 +118,8 @@ class UsageTree(TestCase):
 
     Display `basedir` path and file contents:
 
-    >>> layout.mktree()
+    >>> layout.create()
+    <dirlay.DirLayout ...>
     >>> layout.print_tree(real_basedir=True, show_content=True)
     📂 /tmp/...
     └── 📂 a
@@ -146,4 +146,6 @@ class UsageTree(TestCase):
         ╭─────╮
         │ ddd │
         ╰─────╯
+
+    >>> layout.destroy()
     """

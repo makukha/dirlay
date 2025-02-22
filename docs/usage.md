@@ -15,7 +15,7 @@
 ## TL;DR
 
 ```pycon
->>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}}
+>>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
 >>> layout['a/b/c.txt']
 PosixPath('a/b/c.txt')
 >>> 'z.txt' in layout
@@ -26,8 +26,7 @@ Instantiate on the file system (in temporary directory by default) and remove wh
 exiting the context.
 
 ```pycon
->>> with layout:
-...     layout.mktree()
+>>> with layout.create():
 ...     str(layout['a/b/c.txt'].read_text())
 'ccc'
 ```
@@ -36,9 +35,7 @@ Optionally, change current working directory to a layout subdir, and change back
 after context manager is exited.
 
 ```pycon
->>> with layout:
-...     layout.mktree()
-...     layout.chdir('a/b')
+>>> with layout.create(chdir='a/b'):
 ...     str(Path('c.txt').read_text())
 'ccc'
 ```
@@ -51,7 +48,8 @@ Directory layout can be constructed from dict:
 >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
 >>> layout.basedir is None
 True
->>> layout.mktree()
+>>> layout.create()
+<dirlay.DirLayout ...>
 >>> layout.basedir
 PosixPath('/tmp/...')
 ```
@@ -59,7 +57,7 @@ PosixPath('/tmp/...')
 And remove when not needed anymore:
 
 ```pycon
->>> layout.rmtree()
+>>> layout.destroy()
 ```
 
 ## Chdir to subdirectory
@@ -72,14 +70,15 @@ And remove when not needed anymore:
 When layout is instantiated, current directory remains unchanged:
 
 ```pycon
->>> layout = DirLayout() | {'a': {'b/c.txt': 'ccc'}}
->>> layout.mktree()
+>>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
+>>> layout.create()
+<dirlay.DirLayout ...>
 >>> layout.getcwd()
 PosixPath('/tmp')
 ```
 
 On first `chdir`, initial working directory is stored internally, and will be
-restored on `rmtree`. Without argument, `chdir` sets current directory to
+restored on `destroy`. Without argument, `chdir` sets current directory to
 `layout.basedir`.
 
 ```pycon
@@ -101,7 +100,7 @@ PosixPath('/tmp/.../a/b')
 When directory is removed, current directory is restored:
 
 ```pycon
->>> layout.rmtree()
+>>> layout.destroy()
 >>> layout.getcwd()
 PosixPath('/tmp')
 ```
@@ -121,7 +120,8 @@ PosixPath('/tmp')
 Display `basedir` path and file contents:
 
 ```pycon
->>> layout.mktree()
+>>> layout.create()
+<dirlay.DirLayout ...>
 >>> layout.print_tree(real_basedir=True, show_content=True)
 📂 /tmp/...
 └── 📂 a
@@ -150,6 +150,8 @@ Extra keyword aguments will be passed through to `rich.tree.Tree`:
     ╭─────╮
     │ ddd │
     ╰─────╯
+
+>>> layout.destroy()
 ```
 
 <!-- docsub: end -->
