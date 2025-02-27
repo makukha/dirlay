@@ -17,15 +17,22 @@ init:
 # develop
 
 # synchronize dev environment
-[group('initialize')]
+[group('develop')]
 sync:
-    git submodule update --remote .jist
     uv sync --all-extras --all-groups
+    make requirements
 
 # update dev environment
-[group('initialize')]
+[group('develop')]
 upgrade:
+    # jist
+    rm -rf .jist
+    wget https://github.com/makukha/jist/archive/refs/heads/main.zip
+    unzip -j main.zip -x '*/*/*' -d .jist
+    rm main.zip
+    # python
     uv sync --all-extras --all-groups --upgrade
+    make requirements
 
 # run linters
 [group('develop')]

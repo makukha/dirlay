@@ -70,9 +70,13 @@ sphinx = [
   "sphinx-design ; python_version >= '3.12'",
   "sphinx-sitemap ; python_version >= '3.12'",
 ]
-test = [
+testing = [
   "doctestcase>=0.2",
-  "pytest>=8.3 ; python_version >= '3.12'",
+  "mypy",
+  "pytest>=8.3 ; python_version ~= '3.13'",
+  "pytest-cov>=6.0 ; python_version ~= '3.13'",
+  "pytest-sugar>=1.0 ; python_version ~= '3.13'",
+  "unittest-expander>=0.4",
 ]
 
 # bump-my-version
@@ -136,5 +140,5 @@ ghrel_template = "command: just gh-issue-title"  # abuse config option to pass d
 format = "md"
 fragment_directory = "NEWS.d"
 md_header_level = "2"
-new_fragment_template = "file: .jist/scriv.new_fragment.md.j2"
+new_fragment_template = "file: NEWS.d/.new_fragment.md.j2"
 version = "command: just version"
