@@ -1,16 +1,8 @@
 from unittest import TestCase
 
-from typing_extensions import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing_extensions import Any  # noqa: F401  # used in type hints
-
-from unittest_expander import expand, foreach  # type: ignore
-
-from dirlay.dict import NestedDict
+from dirlay.nested_dict import NestedDict
 
 
-@expand
 class TestNestedDict(TestCase):
     # __init__()
 
@@ -21,7 +13,7 @@ class TestNestedDict(TestCase):
 
     def test_init_invalid(self):  # type: () -> None
         with self.assertRaises(TypeError):
-            NestedDict(...)  # type: ignore
+            NestedDict('invalid')  # type: ignore
 
     def test_init_nested(self):  # type: () -> None
         self.assertEqual({'a': {'b': 'c'}}, NestedDict({'a': {'b': 'c'}}))
@@ -60,14 +52,14 @@ class TestNestedDict(TestCase):
 
     # __setitem__()
 
-    @foreach(
-        ({}, ('a', 'b'), {'a': 'b'}),
-        ({'x': 'y'}, ('a/b', {'c': 'd'}), {'a': {'b': {'c': 'd'}}, 'x': 'y'}),
-    )  # type: ignore
-    def test_setitem(self, orig, item, expected):  # type: (dict[str, Any], tuple[str, Any], dict[str, Any]) -> None
-        x = NestedDict(orig)  # type: NestedDict[dict[str, Any]]
-        x[item[0]] = item[1]
-        self.assertEqual(expected, x)
+    def test_setitem(self):  # type: () -> None
+        for src, item, expected in (
+            ({}, ('a', 'b'), {'a': 'b'}),
+            ({'x': 'y'}, ('a/b', {'c': 'd'}), {'a': {'b': {'c': 'd'}}, 'x': 'y'}),
+        ):
+            result = NestedDict(src)  # type: ignore
+            result[item[0]] = item[1]
+            self.assertEqual(expected, result)
 
     def test_setitem_error(self):  # type: () -> None
         with self.assertRaises(KeyError):
@@ -75,16 +67,39 @@ class TestNestedDict(TestCase):
 
     # __delitem__()
 
-    @foreach(
-        ({'a': 'b'}, 'a', {}),
-        ({'a': {'b': {'c': 'd'}}, 'x': 'y'}, 'a/b', {'a': {}, 'x': 'y'}),
-        ({'a': {'b': {'c': 'd'}}, 'x': 'y'}, 'a', {'x': 'y'}),
-    )  # type: ignore
-    def test_delitem(self, orig, key, expected):  # type: (dict[str, Any], str, dict[str, Any]) -> None
-        x = NestedDict(orig)  # type: NestedDict[dict[str, Any]]
-        del x[key]
-        self.assertEqual(expected, x)
+    def test_delitem(self):  # type: () -> None
+        for src, key, expected in (
+            ({'a': 'b'}, 'a', {}),
+            ({'a': {'b': {'c': 'd'}}, 'x': 'y'}, 'a/b', {'a': {}, 'x': 'y'}),
+            ({'a': {'b': {'c': 'd'}}, 'x': 'y'}, 'a', {'x': 'y'}),
+        ):
+            result = NestedDict(src)  # type: ignore
+            del result[key]
+            self.assertEqual(expected, result)
 
     def test_delitem_error(self):  # type: () -> None
         with self.assertRaises(KeyError):
             del NestedDict()['missing']
+
+    # __contains__()
+
+    def test_contains(self):  # type: () -> None
+        for src, key, expected in (
+            ({}, 'whatever', False),
+            ({'a': 'b'}, 'a', True),
+            ({'a': {'b': {'c': 'd'}}}, 'a/b/c', True),
+            # invalid use
+            ({'a': 'b'}, 0, False),
+            ({'a': 'b'}, {}, False),
+        ):
+            self.assertEqual(expected, key in NestedDict(src))
+
+    # update()
+
+    def test_update(self):  # type: () -> None
+        for src, upd, expected in (
+            ({}, {'a': 'b'}, {'a': 'b'}),
+            ({'a/b': 'c'}, {'a/d': 'e'}, {'a': {'b': 'c', 'd': 'e'}}),
+            ({'a/b': 'c'}, {'a': {'d': 'e'}}, {'a': {'b': 'c', 'd': 'e'}}),
+        ):
+            self.assertEqual(expected, (NestedDict(src) | upd).data)
