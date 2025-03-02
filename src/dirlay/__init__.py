@@ -7,7 +7,7 @@ try:
     from reprlib import aRepr
 
     a_repr = aRepr.repr
-except ImportError:
+except ImportError:  # pragma: no cover
     a_repr = repr
 
 from dirlay.__version__ import __version__
@@ -16,7 +16,7 @@ from dirlay.optional import pathlib, rich
 
 if sys.version_info > (3,):
     NestedDict = BaseNestedDict
-else:
+else:  # pragma: no cover
     from collections import OrderedDict as BaseOrderedDict
 
     class OrderedDict(BaseOrderedDict):
@@ -34,7 +34,7 @@ else:
 
 if rich is not None:
     from dirlay.format_rich import as_tree, rich_print
-else:
+else:  # pragma: no cover
     as_tree = None
 
     def rich_print(*args):
@@ -283,7 +283,7 @@ class Dir:
                 path.parent.mkdir(parents=True, exist_ok=True)
                 if sys.version_info > (3,):
                     path.write_text(node.data)
-                else:
+                else:  # pragma: no cover
                     path.write_text(node.data.decode('utf-8'))
         # chdir
         if chdir is not None:

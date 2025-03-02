@@ -15,14 +15,14 @@ PathType = Union[Path, str]  # type: TypeAlias
 
 StrDict = Dict[str, Any]  # type: TypeAlias
 
-if sys.version_info < (3, 9):
+if sys.version_info < (3, 9):  # pragma: no cover
     AnyDict = Union[StrDict, UserDict]  # type: TypeAlias
 else:
     AnyDict = Union[StrDict, UserDict[str, Any]]  # type: TypeAlias
 
 # node tree
 
-if sys.version_info < (3, 9):
+if sys.version_info < (3, 9):  # pragma: no cover
     NodeTree = Mapping  # type: TypeAlias
 else:
     NodeTree = Mapping[str, 'NodeValue']  # type: TypeAlias

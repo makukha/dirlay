@@ -1,9 +1,9 @@
 try:
     from typing import TYPE_CHECKING
-except ImportError:
+except ImportError:  # pragma: no cover
     TYPE_CHECKING = False
 
-if TYPE_CHECKING:
+if TYPE_CHECKING:  # pragma: no cover
     from typing import Optional  # noqa: F401  # used in type hint comment
 
 from rich import print as rich_print  # noqa: F401  # rich_print is exported
@@ -13,7 +13,7 @@ from rich.tree import Tree
 
 try:
     from rich.console import Group
-except ImportError:
+except ImportError:  # pragma: no cover
     from rich.group import Group
 
 from .optional import pathlib
@@ -50,11 +50,6 @@ def as_tree(layout, real_basedir=False, show_data=False, **kwargs):
     Returns:
         ``None``
     """
-    if Tree is NotImplemented:
-        raise NotImplementedError(
-            'Optional dependency rich is required; install as dirlay[rich]'
-        )
-
     theme = DefaultTheme
 
     def label(item, real_path=False):  # type: (Node, bool) -> str

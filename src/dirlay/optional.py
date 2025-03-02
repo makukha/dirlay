@@ -1,11 +1,11 @@
 try:
     import pathlib
-except ImportError:
+except ImportError:  # pragma: no cover
     import pathlib2 as pathlib  # type: ignore
 
 try:
     import rich
-except ImportError:
+except ImportError:  # pragma: no cover
     rich = None  # type: ignore
 
 __all__ = [

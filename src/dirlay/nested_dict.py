@@ -1,6 +1,6 @@
 try:
     from collections import UserDict
-except ImportError:
+except ImportError:  # pragma: no cover
 
     class UserDict(object):
         pass
