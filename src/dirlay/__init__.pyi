@@ -55,7 +55,7 @@ class Dir:
     def mktree(
         self,
         basedir: Optional[PathType] = ...,
-        chdir: Optional[PathType] = ...,
+        chdir: Union[PathType | bool | None] = ...,
     ) -> 'Dir': ...
     def rmtree(self) -> None: ...
     def as_rich(
