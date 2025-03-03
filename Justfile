@@ -109,6 +109,7 @@ release:
     just pre-merge
     just bump
     just changelog
+    just docs
     just confirm "Proofread the changelog and commit changes"
     just merge
     just gh-repo-upd
