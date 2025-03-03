@@ -1,6 +1,8 @@
 dirlay
 ======
 
+| *Directory layout object for testing and documentation*
+
 .. toctree::
     :maxdepth: 1
     :caption: Details
@@ -8,9 +10,6 @@ dirlay
 
     api
     changelog
-
-.. include:: ../desc.md
-    :parser: commonmark
 
 .. include:: ../badges.md
     :parser: commonmark
@@ -36,6 +35,8 @@ Installation
 
             $ uv add dirlay[rich]
 
+
+.. _usage:
 
 Use cases
 ---------
