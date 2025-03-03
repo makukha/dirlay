@@ -278,19 +278,24 @@ class Dir:
         Create directories and files in given or temporary directory.
 
         Args:
-            basedir (`~pathlib.Path` | ``str`` | ``None``):
-                path to base directory under which directories and files will be
+
+            basedir (`~pathlib.Path` | ``str`` | ``None``, optional):
+                Path to base directory under which directories and files will be
                 created; if ``None`` (default), temporary directory is used. After the
                 directory structure is created, ``basedir`` value is available as
                 `~dirlay.Dir.basedir` attribute.
-            chdir (`~pathlib.Path` | ``str`` | ``None``):
-                path to change the current directory to, if needed.
+
+            chdir (`~pathlib.Path` | ``str`` | ``bool`` | ``None``, optional):
+                Change the current directory to given path. If ``None`` (default) or
+                ``False``, directory is not changed; ``True`` is equivalent to ``'.'``.
 
         Returns:
-            `None`
+
+            ``None``
 
         Raises:
-            FileExistsError: if ``basedir`` path already exists.
+
+            FileExistsError: If ``basedir`` path already exists.
         """
         # prepare
         if basedir is None:
@@ -314,8 +319,8 @@ class Dir:
                 else:  # pragma: no cover
                     path.write_text(node.data.decode('utf-8'))
         # chdir
-        if chdir is not None:
-            self.chdir(chdir)
+        if chdir not in (None, False):
+            self.chdir('.' if chdir is True else chdir)
         #
         return self
 
@@ -327,6 +332,7 @@ class Dir:
         was passed, current working directory will be restored to the original one.
 
         Returns:
+
             ``None``
         """
         self._assert_tree_created()
@@ -348,19 +354,28 @@ class Dir:
         Change current directory to a subdirectory relative to layout base.
 
         Args:
+
             path (`~pathlib.Path` | ``str`` | ``None``):
-                relative path to subdirectory to be chdir'ed to; if ``None`` (default),
+                Relative path to subdirectory to be chdir'ed to; if ``None`` (default),
                 `~dirlay.Dir.basedir` will be used.
 
         Returns:
-            `None`
+
+            ``None``
 
         Raises:
-            ValueError: if ``path`` is absolute.
+
+            ValueError: If ``path`` is absolute.
         """
-        # validate
+        # validate type
         self._assert_tree_created()
-        path = Path('.') if path is None else Path(path)
+        if path is None:
+            path = Path()
+        elif isinstance(path, Path) or isinstance(path, str):
+            path = Path(path)
+        else:
+            raise TypeError('Path must be str or Path object')
+        # assert relative
         if path.is_absolute():
             raise ValueError('Absolute path not allowed: "{}"'.format(path))
         # chdir
@@ -381,16 +396,20 @@ class Dir:
         See :ref:`Print as tree` for examples.
 
         Args:
+
             real_basedir (``bool``):
-                whether to show real base directory name instead of ``'.'``; defaults to
+                Whether to show real base directory name instead of ``'.'``; defaults to
                 ``False``.
+
             show_data (``bool``):
-                whether to include file content in the box under the file name; defaults to
-                ``False``.
+                Whether to include file content in the box under the file name; defaults
+                to ``False``.
+
             kwargs (``Any``):
-                optional keyword arguments passed to `~rich.tree.Tree`.
+                Optional keyword arguments passed to `~rich.tree.Tree`.
 
         Returns:
+
             :external+rich:py:obj:`~rich.tree.Tree`
         """
         if rich is None:
@@ -403,6 +422,7 @@ class Dir:
         See `~dirlay.Dir.as_rich`.
 
         Returns:
+
             ``None``
         """
         if rich is None:
@@ -421,6 +441,7 @@ def getcwd():
     Works for Python 2 and 3.
 
     Returns:
+
         `~pathlib.Path`
     """
     return Path.cwd().resolve()

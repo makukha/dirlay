@@ -36,18 +36,23 @@ def as_tree(layout, real_basedir=False, show_data=False, **kwargs):
     the directory layout. See :ref:`Use cases` for examples.
 
     Args:
+
         layout (`~dirlay.Dir`):
-            directory layout to be formatted.
+            Directory layout to be formatted.
+
         real_basedir (``bool``):
-            whether to show real base directory name instead of ``'.'``; defaults to
+            Whether to show real base directory name instead of ``'.'``; defaults to
             ``False``.
+
         show_data (``bool``):
-            whether to include file content in the box under the file name; defaults to
+            Whether to include file content in the box under the file name; defaults to
             ``False``.
+
         kwargs (``Any``):
-            optional keyword arguments passed to `~rich.tree.Tree`.
+            Optional keyword arguments passed to `~rich.tree.Tree`.
 
     Returns:
+
         ``None``
     """
     theme = DefaultTheme

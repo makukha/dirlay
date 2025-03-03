@@ -2,7 +2,7 @@ import os
 from unittest import TestCase
 from uuid import uuid4
 
-from dirlay import Dir, getcwd
+from dirlay import Dir, Path, getcwd
 
 
 class TestFilesystem(TestCase):
@@ -66,3 +66,68 @@ class TestFilesystem(TestCase):
         self.assertEqual(layout.basedir / 'a/b', getcwd())
         layout.rmtree()  # original cwd is restored on rmtree()
         self.assertEqual(cwd, getcwd())
+
+    def test_mktree_chdir(self):  # type: () -> None
+        cwd = getcwd()
+
+        # default
+        with Dir().mktree() as tree:
+            self.assertEqual(cwd, getcwd())  # not changed
+
+        # None
+        with Dir().mktree(chdir=None) as tree:
+            self.assertEqual(cwd, getcwd())  # not changed
+
+        # False
+        with Dir().mktree(chdir=False):
+            self.assertEqual(cwd, getcwd())  # not changed
+
+        # True
+        with Dir().mktree(chdir=True) as tree:
+            self.assertEqual(tree.basedir, getcwd())  # changed to basedir
+
+        # root: str
+        with Dir().mktree(chdir='.') as tree:
+            self.assertEqual(tree.basedir, getcwd())  # changed to basedir
+
+        # root: Path
+        with Dir().mktree(chdir=Path()) as tree:
+            self.assertEqual(tree.basedir, getcwd())  # changed to basedir
+
+        # subdir: str
+        with Dir({'a': {}}).mktree(chdir='a') as tree:
+            self.assertEqual(tree.basedir / 'a', getcwd())  # type: ignore[operator]
+
+        # subdir: Path
+        with Dir({'a': {}}).mktree(chdir=Path('a')) as tree:
+            self.assertEqual(tree.basedir / 'a', getcwd())  # type: ignore[operator]
+
+        # subsubdir: str
+        with Dir({'a': {'b': {}}}).mktree(chdir='a/b') as tree:
+            self.assertEqual(tree.basedir / 'a/b', getcwd())  # type: ignore[operator]
+
+        # subsubdir: Path
+        with Dir({'a': {'b': {}}}).mktree(chdir=Path('a/b')) as tree:
+            self.assertEqual(tree.basedir / 'a/b', getcwd())  # type: ignore[operator]
+
+        # errors
+
+        # not found
+        with self.assertRaises(OSError):
+            with Dir() as tree:
+                tree.mktree(chdir='x')
+
+        # invalid type
+        with self.assertRaises(TypeError):
+            with Dir() as tree:
+                tree.mktree(chdir=[])  # type: ignore
+
+        # absolute: str
+        with self.assertRaises(ValueError):
+            with Dir() as tree:
+                tree.mktree(chdir='/tmp')
+
+        # absolute: Path
+        with self.assertRaises(ValueError):
+            with Dir() as tree:
+                tree.mktree(chdir=Path('/tmp'))
