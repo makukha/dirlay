@@ -5,13 +5,16 @@ build-backend = "hatchling.build"
 [project]
 name = "dirlay"
 description = "Directory layout object for testing and documentation"
+authors = [
+  {name = "Michael Makukha", email = "m.makukha@gmail.com"},
+]
 license = {text = "MIT"}
 readme = "README.md"
 urls.Documentation = "https://dirlay.readthedocs.io"
 urls.Homepage = "https://github.com/makukha/dirlay"
 urls.Repository = "https://github.com/makukha/dirlay"
-urls.Issues = "https://github.com/makukha/dirlay"
-urls.Changelog = "https://github.com/makukha/dirlay"
+urls.Issues = "https://github.com/makukha/dirlay/issues"
+urls.Changelog = "https://github.com/makukha/dirlay/blob/main/CHANGELOG.md"
 keywords = ["directory", "tree", "structure", "layout"]
 classifiers = [
   # see https://pypi.org/classifiers/
@@ -54,15 +57,16 @@ rich = [
 
 [dependency-groups]
 dev = [
-  "bump-my-version>=0.32 ; python_version >= '3.12'",
-  "caseutil>=0.7; python_version>='3.12'",
-  "docsub>=0.9 ; python_version >= '3.12'",
-  "genbadge[tests,coverage]>=1.1 ; python_version >= '3.12'",
-  "mypy>=1.15 ; python_version >= '3.12'",
-  "ruff>=0.9 ; python_version >= '3.12'",
-  "scriv>=1.5 ; python_version >= '3.12'",
+  "bump-my-version>=1 ; python_version >= '3.13'",
+  "caseutil>=0.7.2 ; python_version >= '3.13'",
+  "docsub>=0.9.0 ; python_version >= '3.13'",
+  "genbadge[tests,coverage]>=1.1 ; python_version >= '3.13'",
+  "mypy>=1.15 ; python_version >= '3.13'",
+  "ruff>=0.9 ; python_version >= '3.13'",
+  "scriv>=1.5 ; python_version >= '3.13'",
 ]
 sphinx = [
+  # see readthedocs.yaml
   "furo ; python_version >= '3.12'",
   "myst-parser ; python_version >= '3.12'",
   "sphinx ; python_version >= '3.12'",
@@ -72,10 +76,10 @@ sphinx = [
 ]
 testing = [
   "doctestcase>=0.2.2",
-  "mypy ; python_version >= '3.8'",
-  "pytest ; python_version >= '3.5'",
-  "pytest-cov>=6.0 ; python_version >= '3.12'",
-  "pytest-sugar>=1.0 ; python_version >= '3.12'",
+  "mypy ; python_version >= '3.8'",  # see tox.ini
+  "pytest>=8 ; python_version >= '3.8'",  # see tox.ini
+  "pytest-cov>=6 ; python_version >= '3.13'",
+  "pytest-sugar>=1 ; python_version >= '3.13'",
 ]
 
 # bump-my-version
@@ -84,6 +88,7 @@ testing = [
 current_version = "0.2.1"
 allow_dirty = true
 files = [
+  {filename = ".copier-answers.yml"},
   {filename = "docs/badges.md"},
   {filename = "docs/sphinx/conf.py"},
   {filename = "src/dirlay/__version__.py"},
@@ -93,7 +98,7 @@ files = [
 
 [tool.hatch.build]
 exclude = [
-  ".jist",
+  ".just",
   "Justfile",
   "Makefile",
   "compose.yml",
@@ -104,10 +109,12 @@ path = "src/dirlay/__version__.py"
 # mypy
 
 [tool.mypy]
-exclude = "tests/usage"
 incremental = false
 python_version = "3.9"
 strict = true
+exclude = [
+    "docsubfile.py",  # todo: include docsubfile.py when typing bugs are fixed
+]
 [[tool.mypy.overrides]]
 module = "tests.*"
 allow_incomplete_defs = true
@@ -116,7 +123,6 @@ allow_untyped_defs = true
 # ruff
 
 [tool.ruff]
-exclude = [".jist"]
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F", "B", "S"]
 per-file-ignores."tests/**/*.py" = [
@@ -134,9 +140,9 @@ docstring-code-line-length = "dynamic"
 
 [tool.scriv]
 categories = ["Security ⚠️", "Breaking 🔥", "Removed 💨", "Deprecated ❄️", "Added 🌿", "Changed", "Fixed", "Docs", "Misc"]
-entry_title_template = "[{% if version %}{{ version }}](https://github.com/makukha/dirlay/releases/tag/v{{ version }}) — {% endif %}{{ date.strftime('%Y-%m-%d') }}"
+entry_title_template = "[{{ version }}](https://github.com/makukha/dirlay/releases/tag/v{{ version }}) — {{ date.strftime('%Y-%m-%d') }}"
 format = "md"
 fragment_directory = "NEWS.d"
-md_header_level = "6"
+md_header_level = "2"
 new_fragment_template = "file: NEWS.d/.new_fragment.md.j2"
-version = "command: just version"
+version = "literal: pyproject.toml: tool.bumpversion.current_version"

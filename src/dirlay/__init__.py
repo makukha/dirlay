@@ -10,7 +10,7 @@ try:
 except ImportError:  # pragma: no cover
     a_repr = repr
 
-from dirlay.__version__ import __version__
+from dirlay.__version__ import __version__ as __version__
 from dirlay.nested_dict import NestedDict as BaseNestedDict
 from dirlay.optional import pathlib, rich
 
@@ -42,7 +42,6 @@ else:  # pragma: no cover
 
 
 __all__ = [
-    '__version__',
     'Dir',
     'NestedDict',
     'Node',
