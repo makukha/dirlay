@@ -5,11 +5,11 @@ try:
 except ImportError:
     Tree = None  # type: ignore[assignment,misc]  # assign to type
 
-from dirlay import DirLayout
+from dirlay import Dir
 
-def to_tree(
-    layout: DirLayout,
+def as_tree(
+    layout: Dir,
     real_basedir: bool = ...,
-    show_content: bool = ...,
+    show_data: bool = ...,
     **kwargs: Any,
 ) -> Tree: ...

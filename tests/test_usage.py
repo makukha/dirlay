@@ -5,39 +5,54 @@ from unittest import TestCase, skipIf
 
 from doctestcase import doctestcase
 
-from dirlay import DirLayout, Path
+from dirlay import Dir, Path, getcwd
 
 
 case = doctestcase(
-    globals={'DirLayout': DirLayout, 'Path': Path},
+    globals={'Dir': Dir, 'Path': Path, 'getcwd': getcwd},
     options=ELLIPSIS,
 )
 
 
 @case
-class UsageTLDR(TestCase):
+class QuickStart(TestCase):
     """
-    TL;DR
+    QuickStart
 
-    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+    Define directory structure and files content:
+
+    >>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+    >>> layout.data == {'a': {'b': {'c.txt': 'ccc'}, 'd.txt': 'ddd'}}
+    True
     >>> layout['a/b/c.txt']
-    PosixPath('a/b/c.txt')
+    <Node 'a/b/c.txt': 'ccc'>
     >>> 'z.txt' in layout
     False
+
+    Content of files and directories can be updated:
+
+    >>> layout |= {'a/d.txt': {'e.txt': 'eee'}}
+    >>> layout['a/b/c.txt'].data *= 2
+    >>> layout.root()
+    <Node '.': {'a': {...}}>
+    >>> layout.data == {'a': {'b': {'c.txt': 'cccccc'}, 'd.txt': {'e.txt': 'eee'}}}
+    True
 
     Instantiate on the file system (in temporary directory by default) and remove when
     exiting the context.
 
-    >>> with layout.create():
-    ...     str(layout['a/b/c.txt'].read_text())
-    'ccc'
+    >>> with layout.mktree():
+    ...     assert getcwd() != layout.basedir  # cwd not changed
+    ...     str(layout['a/b/c.txt'].path.read_text())
+    'cccccc'
 
     Optionally, change current working directory to a layout subdir, and change back
     after context manager is exited.
 
-    >>> with layout.create(chdir='a/b'):
+    >>> with layout.mktree(chdir='a/b'):
+    ...     assert getcwd() == layout.basedir / 'a/b'
     ...     str(Path('c.txt').read_text())
-    'ccc'
+    'cccccc'
     """
 
 
@@ -48,17 +63,17 @@ class UsageCreate(TestCase):
 
     Directory layout can be constructed from dict:
 
-    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+    >>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
     >>> layout.basedir is None
     True
-    >>> layout.create()
-    <dirlay.DirLayout ...>
+    >>> layout.mktree()
+    <Dir '/tmp/...': {'a': ...}>
     >>> layout.basedir
     PosixPath('/tmp/...')
 
     And remove when not needed anymore:
 
-    >>> layout.destroy()
+    >>> layout.rmtree()
     """
 
 
@@ -72,10 +87,10 @@ class UsageChdir(TestCase):
 
     When layout is instantiated, current directory remains unchanged:
 
-    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
-    >>> layout.create()
-    <dirlay.DirLayout ...>
-    >>> layout.getcwd()
+    >>> layout = Dir({'a/b/c.txt': 'ccc'})
+    >>> layout.mktree()
+    <Dir '/tmp/...': {'a': {'b': {'c.txt': 'ccc'}}}>
+    >>> getcwd()
     PosixPath('/tmp')
 
     On first `chdir`, initial working directory is stored internally, and will be
@@ -85,19 +100,19 @@ class UsageChdir(TestCase):
     >>> layout.basedir
     PosixPath('/tmp/...')
     >>> layout.chdir()
-    >>> layout.getcwd()
+    >>> getcwd()
     PosixPath('/tmp/...')
 
     If `chdir` has argument, it must be a path relative to `basedir`.
 
     >>> layout.chdir('a/b')
-    >>> layout.getcwd()
+    >>> getcwd()
     PosixPath('/tmp/.../a/b')
 
     When directory is removed, current directory is restored:
 
-    >>> layout.destroy()
-    >>> layout.getcwd()
+    >>> layout.rmtree()
+    >>> getcwd()
     PosixPath('/tmp')
     """
 
@@ -108,19 +123,19 @@ class UsageTree(TestCase):
     """
     Print as tree
 
-    >>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
-    >>> layout.print_tree()
+    >>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+    >>> layout.print_rich()
     📂 .
     └── 📂 a
         ├── 📂 b
         │   └── 📄 c.txt
         └── 📄 d.txt
 
-    Display `basedir` path and file contents:
+    Display `basedir` path and file content:
 
-    >>> layout.create()
-    <dirlay.DirLayout ...>
-    >>> layout.print_tree(real_basedir=True, show_content=True)
+    >>> layout.mktree()
+    <Dir '/tmp/...': ...>
+    >>> layout.print_rich(real_basedir=True, show_data=True)
     📂 /tmp/...
     └── 📂 a
         ├── 📂 b
@@ -133,9 +148,9 @@ class UsageTree(TestCase):
             │ ddd │
             ╰─────╯
 
-    Extra keyword aguments will be passed through to `rich.tree.Tree`:
+    Extra keyword arguments will be passed through to `rich.tree.Tree`:
 
-    >>> layout.print_tree(real_basedir=True, show_content=True, hide_root=True)
+    >>> layout.print_rich(show_data=True, hide_root=True)
     📂 a
     ├── 📂 b
     │   └── 📄 c.txt
@@ -147,5 +162,5 @@ class UsageTree(TestCase):
         │ ddd │
         ╰─────╯
 
-    >>> layout.destroy()
+    >>> layout.rmtree()
     """
