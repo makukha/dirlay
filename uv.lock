@@ -1,18 +1,15 @@
 version = 1
 requires-python = ">=2.7, !=3.0, !=3.1, !=3.2, !=3.3, !=3.4"
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
     "python_full_version == '3.8.*'",
     "python_full_version == '3.7.*'",
-    "python_full_version >= '3.6.8' and python_full_version < '3.7'",
-    "python_full_version >= '3.6.3' and python_full_version < '3.6.8'",
+    "python_full_version >= '3.6.3' and python_full_version < '3.7'",
     "python_full_version >= '3.6.2' and python_full_version < '3.6.3'",
     "python_full_version >= '3.6' and python_full_version < '3.6.2'",
-    "python_full_version == '3.5.*'",
-    "python_full_version < '3.5'",
+    "python_full_version < '3.6'",
 ]
 
 [[package]]
@@ -631,8 +628,7 @@ name = "markdown-it-py"
 version = "3.0.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
     "python_full_version == '3.8.*'",
@@ -792,8 +788,7 @@ name = "mypy"
 version = "1.15.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
 ]
@@ -878,7 +873,7 @@ version = "2.3.7.post1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "scandir", marker = "python_full_version < '3.5'" },
-    { name = "six", marker = "python_full_version < '3.5'" },
+    { name = "six", marker = "python_full_version < '3.6'" },
     { name = "typing", marker = "python_full_version < '3.5'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/31/51/99caf463dc7c18eb18dad1fffe465a3cf3ee50ac3d1dccbd1781336fe9c7/pathlib2-2.3.7.post1.tar.gz", hash = "sha256:9fe0edad898b83c0c3e199c842b27ed216645d2e177757b2dd67384d4113c641", size = 211190 }
@@ -1127,8 +1122,7 @@ name = "pygments"
 version = "2.14.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.6.8' and python_full_version < '3.7'",
-    "python_full_version >= '3.6.3' and python_full_version < '3.6.8'",
+    "python_full_version >= '3.6.3' and python_full_version < '3.7'",
     "python_full_version >= '3.6.2' and python_full_version < '3.6.3'",
     "python_full_version >= '3.6' and python_full_version < '3.6.2'",
 ]
@@ -1154,8 +1148,7 @@ name = "pygments"
 version = "2.19.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
     "python_full_version == '3.8.*'",
@@ -1167,7 +1160,7 @@ wheels = [
 
 [[package]]
 name = "pytest"
-version = "8.3.4"
+version = "8.3.5"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama", marker = "python_full_version >= '3.8' and sys_platform == 'win32'" },
@@ -1177,9 +1170,9 @@ dependencies = [
     { name = "pluggy", marker = "python_full_version >= '3.8'" },
     { name = "tomli", marker = "python_full_version >= '3.8' and python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/05/35/30e0d83068951d90a01852cb1cef56e5d8a09d20c7f511634cc2f7e0372a/pytest-8.3.4.tar.gz", hash = "sha256:965370d062bce11e73868e0335abac31b4d3de0e82f4007408d242b4f8610761", size = 1445919 }
+sdist = { url = "https://files.pythonhosted.org/packages/ae/3c/c9d525a414d506893f0cd8a8d0de7706446213181570cdbd766691164e40/pytest-8.3.5.tar.gz", hash = "sha256:f4efe70cc14e511565ac476b57c279e12a855b11f48f212af1080ef2263d3845", size = 1450891 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/11/92/76a1c94d3afee238333bc0a42b82935dd8f9cf8ce9e336ff87ee14d9e1cf/pytest-8.3.4-py3-none-any.whl", hash = "sha256:50e16d954148559c9a74109af1eaf0c945ba2d8f30f0a3d3335edde19788b6f6", size = 343083 },
+    { url = "https://files.pythonhosted.org/packages/30/3d/64ad57c803f1fa1e963a7946b6e0fea4a70df53c1a7fed304586539c2bac/pytest-8.3.5-py3-none-any.whl", hash = "sha256:c69214aa47deac29fad6c2a4f590b9c4a9fdb16a403176fe154b79c0b4d4d820", size = 343634 },
 ]
 
 [[package]]
@@ -1347,8 +1340,7 @@ name = "rich"
 version = "12.6.0"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.6.8' and python_full_version < '3.7'",
-    "python_full_version >= '3.6.3' and python_full_version < '3.6.8'",
+    "python_full_version >= '3.6.3' and python_full_version < '3.7'",
 ]
 dependencies = [
     { name = "commonmark", marker = "python_full_version >= '3.6.3' and python_full_version < '3.7'" },
@@ -1383,8 +1375,7 @@ name = "rich"
 version = "13.9.4"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
     "python_full_version == '3.8.*'",
@@ -1527,7 +1518,7 @@ wheels = [
 
 [[package]]
 name = "sphinx"
-version = "8.2.1"
+version = "8.2.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "alabaster", marker = "python_full_version >= '3.12'" },
@@ -1548,9 +1539,9 @@ dependencies = [
     { name = "sphinxcontrib-qthelp", marker = "python_full_version >= '3.12'" },
     { name = "sphinxcontrib-serializinghtml", marker = "python_full_version >= '3.12'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/99/4b/95bdb36eaee30698f2d244d52e1b9e58642af56525d4b02fcd0f7312c27c/sphinx-8.2.1.tar.gz", hash = "sha256:e4b932951b9c18b039f73b72e4e63afe967d90408700ec222b981ac24647c01e", size = 8321376 }
+sdist = { url = "https://files.pythonhosted.org/packages/38/ad/4360e50ed56cb483667b8e6dadf2d3fda62359593faabbe749a27c4eaca6/sphinx-8.2.3.tar.gz", hash = "sha256:398ad29dee7f63a75888314e9424d40f52ce5a6a87ae88e7071e80af296ec348", size = 8321876 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/cf/aa/282768cff0039b227a923cb65686539bb606e448c594d4fdee4d2c7765a1/sphinx-8.2.1-py3-none-any.whl", hash = "sha256:b5d2bb3cdf6207fcacde9f92085d2b97667b05b9c346eaec426ca4be8af505e9", size = 3589415 },
+    { url = "https://files.pythonhosted.org/packages/31/53/136e9eca6e0b9dc0e1962e2c908fbea2e5ac000c2a2fbd9a35797958c48b/sphinx-8.2.3-py3-none-any.whl", hash = "sha256:4405915165f13521d875a8c29c8970800a0141c14cc5416a38feca4ea5d9b9c3", size = 3589741 },
 ]
 
 [[package]]
@@ -1738,8 +1729,7 @@ name = "typing-extensions"
 version = "4.1.1"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.6.8' and python_full_version < '3.7'",
-    "python_full_version >= '3.6.3' and python_full_version < '3.6.8'",
+    "python_full_version >= '3.6.3' and python_full_version < '3.7'",
     "python_full_version >= '3.6.2' and python_full_version < '3.6.3'",
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/b1/5a/8b5fbb891ef3f81fc923bf3cb4a578c0abf9471eb50ce0f51c74212182ab/typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42", size = 26694 }
@@ -1764,8 +1754,7 @@ name = "typing-extensions"
 version = "4.12.2"
 source = { registry = "https://pypi.org/simple" }
 resolution-markers = [
-    "python_full_version >= '3.13' and python_full_version < '4'",
-    "python_full_version >= '4'",
+    "python_full_version >= '3.13'",
     "python_full_version == '3.12.*'",
     "python_full_version >= '3.9' and python_full_version < '3.12'",
     "python_full_version == '3.8.*'",
