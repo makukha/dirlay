@@ -57,7 +57,7 @@ rich = [
 
 [dependency-groups]
 dev = [
-  "bump-my-version>=1 ; python_version >= '3.13'",
+  "bump-my-version>=1.0 ; python_version >= '3.13'",
   "caseutil>=0.7.2 ; python_version >= '3.13'",
   "docsub>=0.9.0 ; python_version >= '3.13'",
   "genbadge[tests,coverage]>=1.1 ; python_version >= '3.13'",

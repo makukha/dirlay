@@ -24,12 +24,12 @@ tests/requirements.txt: uv.lock
 docs: sphinx README.md
 
 .PHONY: sphinx
-sphinx: docs/_build
-docs/_build: docs/usage.md docs/**/*.* src/**/*.*
+sphinx: docs/sphinx/_build
+docs/sphinx/_build: docs/*.md docs/sphinx/*.* src/**/*.*
 	rm -rf $@
 	cd docs/sphinx && uv run sphinx-build -b html . _build
 
-README.md: docs/usage.md FORCE
+README.md: docs/*.md FORCE
 	uv run docsub sync -i $@
 
 %.md: FORCE
