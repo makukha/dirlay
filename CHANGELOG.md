@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.3.1'></a>
+## [0.3.1](https://github.com/makukha/dirlay/releases/tag/v0.3.1) — 2025-03-03
+
+***Added 🌿***
+
+- Argument `chdir` of `Dir.mktree()` can now accept boolean values.
+
 <a id='changelog-0.3.0'></a>
 ## [0.3.0](https://github.com/makukha/dirlay/releases/tag/v0.3.0) — 2025-03-03
 
