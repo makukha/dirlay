@@ -352,7 +352,7 @@ wheels = [
 
 [[package]]
 name = "dirlay"
-version = "0.2.1"
+version = "0.3.0"
 source = { editable = "." }
 dependencies = [
     { name = "pathlib2", marker = "python_full_version < '3'" },
@@ -402,7 +402,7 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "bump-my-version", marker = "python_full_version >= '3.13'", specifier = ">=1" },
+    { name = "bump-my-version", marker = "python_full_version >= '3.13'", specifier = ">=1.0" },
     { name = "caseutil", marker = "python_full_version >= '3.13'", specifier = ">=0.7.2" },
     { name = "docsub", marker = "python_full_version >= '3.13'", specifier = ">=0.9.0" },
     { name = "genbadge", extras = ["tests", "coverage"], marker = "python_full_version >= '3.13'", specifier = ">=1.1" },

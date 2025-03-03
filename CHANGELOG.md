@@ -8,6 +8,23 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.3.0'></a>
+## [0.3.0](https://github.com/makukha/dirlay/releases/tag/v0.3.0) — 2025-03-03
+
+***Breaking 🔥***
+
+- Multiple API changes
+
+***Misc***
+
+- Started using new internal data structure `NestedDict`
+
+- Started using [makukha/copier-python](https://github.com/makukha/copier-python)
+
+***Fixed***
+
+- Existing `basedir` should not raise error on layout creation
+
 <a id='changelog-0.2.1'></a>
 ## [0.2.1](https://github.com/makukha/dirlay/releases/tag/v0.2.1) — 2025-02-22
 
