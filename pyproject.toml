@@ -113,7 +113,7 @@ incremental = false
 python_version = "3.9"
 strict = true
 exclude = [
-    "docsubfile.py",  # todo: include docsubfile.py when typing bugs are fixed
+  "docsubfile.py",  # todo: include docsubfile.py when typing bugs are fixed
 ]
 [[tool.mypy.overrides]]
 module = "tests.*"
