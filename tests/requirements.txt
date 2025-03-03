@@ -75,9 +75,9 @@ coverage==7.6.12 ; python_full_version >= '3.12' \
     --hash=sha256:f25d8b92a4e31ff1bd873654ec367ae811b3a943583e05432ea29264782dc32c \
     --hash=sha256:f60a297c3987c6c02ffb29effc70eadcbb412fe76947d394a1091a3615948e2f \
     --hash=sha256:f973643ef532d4f9be71dd88cf7588936685fdb576d93a79fe9f65bc337d9d73
-doctestcase==0.2.1 \
-    --hash=sha256:21da533c64e3aebe052833024e719ab52baf744bb0444e181b985406e41328b1 \
-    --hash=sha256:5a8a7821820e3bd9fdfae3b1af1be01a53208d861ff51ed86b6cad30b2d7915d
+doctestcase==0.2.2 \
+    --hash=sha256:81a5bb67d5f549a3575efe46c6c786644bd8cff0ef889843eb0ae25f2eda9c9e \
+    --hash=sha256:bbf908b4d8752885d261b4086d6eb0981d08ff22822ff2daca058619aa20f561
 exceptiongroup==1.2.2 ; python_full_version >= '3.7' and python_full_version < '3.11' \
     --hash=sha256:3111b9d131c238bec2f8f516e123e14ba243563fb135d3fe885990585aa7795b \
     --hash=sha256:47c2edf7c6738fafb49fd34290706d1a1a2f4d1c6df275526b62cbb4aa5393cc

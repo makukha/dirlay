@@ -15,13 +15,13 @@ case = doctestcase(
 
 
 @case
-class UsageTLDR(TestCase):
+class QuickStart(TestCase):
     """
-    TL;DR
+    QuickStart
+
+    Define directory structure and files content:
 
     >>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
-    >>> layout
-    <Dir '.': {'a': {...}}>
     >>> layout.data == {'a': {'b': {'c.txt': 'ccc'}, 'd.txt': 'ddd'}}
     True
     >>> layout['a/b/c.txt']
@@ -31,8 +31,8 @@ class UsageTLDR(TestCase):
 
     Content of files and directories can be updated:
 
-    >>> layout['a/b/c.txt'].data *= 2
     >>> layout |= {'a/d.txt': {'e.txt': 'eee'}}
+    >>> layout['a/b/c.txt'].data *= 2
     >>> layout.root()
     <Node '.': {'a': {...}}>
     >>> layout.data == {'a': {'b': {'c.txt': 'cccccc'}, 'd.txt': {'e.txt': 'eee'}}}
@@ -42,6 +42,7 @@ class UsageTLDR(TestCase):
     exiting the context.
 
     >>> with layout.mktree():
+    ...     assert getcwd() != layout.basedir  # cwd not changed
     ...     str(layout['a/b/c.txt'].path.read_text())
     'cccccc'
 
@@ -49,6 +50,7 @@ class UsageTLDR(TestCase):
     after context manager is exited.
 
     >>> with layout.mktree(chdir='a/b'):
+    ...     assert getcwd() == layout.basedir / 'a/b'
     ...     str(Path('c.txt').read_text())
     'cccccc'
     """

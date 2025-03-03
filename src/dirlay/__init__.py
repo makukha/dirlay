@@ -55,7 +55,28 @@ Path = pathlib.Path
 
 class Node(object):
     """
-    Abstract node representing directory or file.
+    Node proxy object representing directory or file.
+
+    Attributes:
+
+        key (``str``):
+            String path relative to `~dirlay.Dir` root, and also a mapping key:
+
+            >>> tree = Dir({'a': {'b.md': 'B'}})
+            >>> tree[tree['a/b.md'].key] == tree['a/b.md']
+            True
+
+        path (`~pathlib.Path`):
+            Path of the node; if parent `Dir` is not created on the file system,
+            it is relative to parent `~dirlay.Dir.basedir` and matches
+            `~dirlay.Node.key`; otherwise it is an absolute path on the file system.
+
+        is_dir (``bool``):
+            Whether the node is a directory.
+
+        data (``str | dict[str, str | dict]``)
+            In-memory file content if the node is a file, or, if `~dirlay.Node.is_dir`
+            is ``True``, a dictionary, representing directory structure.
     """
 
     def __init__(self, key, path, base):
@@ -63,6 +84,14 @@ class Node(object):
         self.path = Path(path)
         self._base = base
         self._name = '.' if key == '.' else self.path.name
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, Node)
+            and self.key == other.key
+            and self.path == other.path
+            and self._base is other._base
+        )
 
     @property
     def data(self):
@@ -389,6 +418,8 @@ class Dir:
 def getcwd():
     """
     Get current working directory.
+
+    Works for Python 2 and 3.
 
     Returns:
         `~pathlib.Path`

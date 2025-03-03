@@ -4,7 +4,7 @@ from dirlay import Dir
 
 try:
     from typing import List, Tuple  # noqa: F401  # used in type hints
-    from dirlay.types import NodeValue, StrDict  # noqa: F401  # used in type hints
+    from dirlay.types import DictNode, StrDict  # noqa: F401  # used in type hints
 except ImportError:
     pass
 
@@ -51,7 +51,7 @@ class TestModify(TestCase):
             Dir(src) | upd
 
     def test_update_data(self):  # type: () -> None
-        def assertPassing(src, kvs, expected):  # type: (StrDict, List[Tuple[str, NodeValue]], StrDict) -> None
+        def assertPassing(src, kvs, expected):  # type: (StrDict, List[Tuple[str, DictNode]], StrDict) -> None
             updated = Dir(src)
             for k, v in kvs:
                 updated[k].data = v
@@ -64,7 +64,7 @@ class TestModify(TestCase):
             assertPassing(src, kvs, expected)  # type: ignore
 
     def test_update_data_error(self):  # type: () -> None
-        def assertError(src, k, v, errtype):  # type: (StrDict, str, NodeValue, type[Exception]) -> None
+        def assertError(src, k, v, errtype):  # type: (StrDict, str, DictNode, type[Exception]) -> None
             with self.assertRaises(errtype):
                 Dir(src)[k].data = v
 

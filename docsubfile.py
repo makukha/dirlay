@@ -15,7 +15,8 @@ def x() -> None:
 @x.command()
 @click.argument('testpath', type=click.Path(exists=True, dir_okay=False))
 @click.argument('nameregex')
-def cases(testpath: click.Path, nameregex: str) -> None:
+@click.option('--title/--no-title', default=True)
+def cases(testpath: click.Path, nameregex: str, title: bool) -> None:
     """
     Print usage section based on test case docstrings.
     """
@@ -23,7 +24,7 @@ def cases(testpath: click.Path, nameregex: str) -> None:
     cases.sort(key=lambda c: c.__firstlineno__)  # type: ignore[attr-defined]
     for case in cases:
         if re.fullmatch(nameregex, case.__name__):
-            click.echo(to_markdown(case))
+            click.echo(to_markdown(case, include_title=title))
 
 
 @x.command()

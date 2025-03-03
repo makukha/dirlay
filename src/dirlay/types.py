@@ -23,8 +23,18 @@ else:
 # node tree
 
 if sys.version_info < (3, 9):  # pragma: no cover
-    NodeTree = Mapping  # type: TypeAlias
+    DictTree = Mapping  # type: TypeAlias
 else:
-    NodeTree = Mapping[str, 'NodeValue']  # type: TypeAlias
+    DictTree = Mapping[str, 'DictNode']  # type: TypeAlias
+    """
+    TypeAlias: User representation of directory structure to be provided as input
+    to `~dirlay.Dir` constructor or `~dirlay.Dir.update` method and operations:
 
-NodeValue = Union[NodeTree, str]  # type: TypeAlias
+    >>> tree = Dir({'a': {'b.md': 'b file content'}})
+    >>> tree |= {'c.md': 'c file content'}
+    """
+
+DictNode = Union[str, DictTree]  # type: TypeAlias
+"""
+TypeAlias: User representation of directory node — a file or a directory.
+"""

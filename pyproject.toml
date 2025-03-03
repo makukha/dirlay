@@ -71,7 +71,7 @@ sphinx = [
   "sphinx-sitemap ; python_version >= '3.12'",
 ]
 testing = [
-  "doctestcase>=0.2",
+  "doctestcase>=0.2.2",
   "mypy ; python_version >= '3.8'",
   "pytest ; python_version >= '3.5'",
   "pytest-cov>=6.0 ; python_version >= '3.12'",

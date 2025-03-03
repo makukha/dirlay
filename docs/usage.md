@@ -1,55 +1,73 @@
 <!-- docsub: begin -->
 <!-- docsub: x toc tests/test_usage.py 'Usage.*' -->
-* [TL;DR](#tl-dr)
 * [Create directory layout tree](#create-directory-layout-tree)
 * [Chdir to subdirectory](#chdir-to-subdirectory)
 * [Print as tree](#print-as-tree)
 <!-- docsub: end -->
 
 ```pycon
->>> from dirlay import DirectoryLayout, to_tree
+>>> from dirlay import Dir
 ```
 
 <!-- docsub: begin -->
-<!-- docsub: x cases tests/test_usage.py 'Usage.*' -->
-## TL;DR
+<!-- docsub: x cases --no-title tests/test_usage.py 'QuickStart' -->
+Define directory structure and files content:
 
 ```pycon
->>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+>>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+>>> layout.data == {'a': {'b': {'c.txt': 'ccc'}, 'd.txt': 'ddd'}}
+True
 >>> layout['a/b/c.txt']
-PosixPath('a/b/c.txt')
+<Node 'a/b/c.txt': 'ccc'>
 >>> 'z.txt' in layout
 False
+```
+
+Content of files and directories can be updated:
+
+```pycon
+>>> layout |= {'a/d.txt': {'e.txt': 'eee'}}
+>>> layout['a/b/c.txt'].data *= 2
+>>> layout.root()
+<Node '.': {'a': {...}}>
+>>> layout.data == {'a': {'b': {'c.txt': 'cccccc'}, 'd.txt': {'e.txt': 'eee'}}}
+True
 ```
 
 Instantiate on the file system (in temporary directory by default) and remove when
 exiting the context.
 
 ```pycon
->>> with layout.create():
-...     str(layout['a/b/c.txt'].read_text())
-'ccc'
+>>> with layout.mktree():
+...     assert getcwd() != layout.basedir  # cwd not changed
+...     str(layout['a/b/c.txt'].path.read_text())
+'cccccc'
 ```
 
 Optionally, change current working directory to a layout subdir, and change back
 after context manager is exited.
 
 ```pycon
->>> with layout.create(chdir='a/b'):
+>>> with layout.mktree(chdir='a/b'):
+...     assert getcwd() == layout.basedir / 'a/b'
 ...     str(Path('c.txt').read_text())
-'ccc'
+'cccccc'
 ```
 
+<!-- docsub: end -->
+
+<!-- docsub: begin -->
+<!-- docsub: x cases tests/test_usage.py 'Usage.*' -->
 ## Create directory layout tree
 
 Directory layout can be constructed from dict:
 
 ```pycon
->>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+>>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
 >>> layout.basedir is None
 True
->>> layout.create()
-<dirlay.DirLayout ...>
+>>> layout.mktree()
+<Dir '/tmp/...': {'a': ...}>
 >>> layout.basedir
 PosixPath('/tmp/...')
 ```
@@ -57,7 +75,7 @@ PosixPath('/tmp/...')
 And remove when not needed anymore:
 
 ```pycon
->>> layout.destroy()
+>>> layout.rmtree()
 ```
 
 ## Chdir to subdirectory
@@ -70,10 +88,10 @@ And remove when not needed anymore:
 When layout is instantiated, current directory remains unchanged:
 
 ```pycon
->>> layout = DirLayout({'a': {'b/c.txt': 'ccc'}})
->>> layout.create()
-<dirlay.DirLayout ...>
->>> layout.getcwd()
+>>> layout = Dir({'a/b/c.txt': 'ccc'})
+>>> layout.mktree()
+<Dir '/tmp/...': {'a': {'b': {'c.txt': 'ccc'}}}>
+>>> getcwd()
 PosixPath('/tmp')
 ```
 
@@ -85,7 +103,7 @@ restored on `destroy`. Without argument, `chdir` sets current directory to
 >>> layout.basedir
 PosixPath('/tmp/...')
 >>> layout.chdir()
->>> layout.getcwd()
+>>> getcwd()
 PosixPath('/tmp/...')
 ```
 
@@ -93,23 +111,23 @@ If `chdir` has argument, it must be a path relative to `basedir`.
 
 ```pycon
 >>> layout.chdir('a/b')
->>> layout.getcwd()
+>>> getcwd()
 PosixPath('/tmp/.../a/b')
 ```
 
 When directory is removed, current directory is restored:
 
 ```pycon
->>> layout.destroy()
->>> layout.getcwd()
+>>> layout.rmtree()
+>>> getcwd()
 PosixPath('/tmp')
 ```
 
 ## Print as tree
 
 ```pycon
->>> layout = DirLayout({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
->>> layout.print_tree()
+>>> layout = Dir({'a': {'b/c.txt': 'ccc', 'd.txt': 'ddd'}})
+>>> layout.print_rich()
 📂 .
 └── 📂 a
     ├── 📂 b
@@ -117,12 +135,12 @@ PosixPath('/tmp')
     └── 📄 d.txt
 ```
 
-Display `basedir` path and file contents:
+Display `basedir` path and file content:
 
 ```pycon
->>> layout.create()
-<dirlay.DirLayout ...>
->>> layout.print_tree(real_basedir=True, show_content=True)
+>>> layout.mktree()
+<Dir '/tmp/...': ...>
+>>> layout.print_rich(real_basedir=True, show_data=True)
 📂 /tmp/...
 └── 📂 a
     ├── 📂 b
@@ -136,10 +154,10 @@ Display `basedir` path and file contents:
         ╰─────╯
 ```
 
-Extra keyword aguments will be passed through to `rich.tree.Tree`:
+Extra keyword arguments will be passed through to `rich.tree.Tree`:
 
 ```pycon
->>> layout.print_tree(real_basedir=True, show_content=True, hide_root=True)
+>>> layout.print_rich(show_data=True, hide_root=True)
 📂 a
 ├── 📂 b
 │   └── 📄 c.txt
@@ -151,7 +169,7 @@ Extra keyword aguments will be passed through to `rich.tree.Tree`:
     │ ddd │
     ╰─────╯
 
->>> layout.destroy()
+>>> layout.rmtree()
 ```
 
 <!-- docsub: end -->
