@@ -8,6 +8,22 @@ All notable changes to this project will be documented in this file based on [Ke
 
 <!-- scriv-insert-here -->
 
+<a id='changelog-0.4.0'></a>
+## [0.4.0](https://github.com/makukha/dirlay/releases/tag/v0.4.0) — 2025-03-04
+
+***Breaking 🔥***
+
+- `Node` constructor signature changed to `(key: str, base: DictTree, basedir: Optional[Path])`
+
+- `Node` has now separate attributes `abspath` and `relpath` instead of single polymorphic `path`
+
+- `is_dir` property of `Node` was renamed to `isdir`
+
+***Added 🌿***
+
+- Relative sub-path operator `tree / 'subdir'`
+- Absolute sub-path operator `tree // 'subdir'`
+
 <a id='changelog-0.3.1'></a>
 ## [0.3.1](https://github.com/makukha/dirlay/releases/tag/v0.3.1) — 2025-03-03
 

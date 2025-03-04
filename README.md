@@ -7,10 +7,10 @@
 <!-- docsub: begin -->
 <!-- docsub: include docs/badges.md -->
 [![license](https://img.shields.io/github/license/makukha/dirlay.svg)](https://github.com/makukha/dirlay/blob/main/LICENSE)
-[![pypi](https://img.shields.io/pypi/v/dirlay.svg#v0.3.1)](https://pypi.org/project/dirlay)
+[![pypi](https://img.shields.io/pypi/v/dirlay.svg#v0.4.0)](https://pypi.org/project/dirlay)
 [![python versions](https://img.shields.io/pypi/pyversions/dirlay.svg)](https://pypi.org/project/dirlay)
-[![tests](https://raw.githubusercontent.com/makukha/dirlay/v0.3.1/docs/img/badge/tests.svg)](https://github.com/makukha/dirlay)
-[![coverage](https://raw.githubusercontent.com/makukha/dirlay/v0.3.1/docs/img/badge/coverage.svg)](https://github.com/makukha/dirlay)
+[![tests](https://raw.githubusercontent.com/makukha/dirlay/v0.4.0/docs/img/badge/tests.svg)](https://github.com/makukha/dirlay)
+[![coverage](https://raw.githubusercontent.com/makukha/dirlay/v0.4.0/docs/img/badge/coverage.svg)](https://github.com/makukha/dirlay)
 [![tested with multipython](https://img.shields.io/badge/tested_with-multipython-x)](https://github.com/makukha/multipython)
 [![uses docsub](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/makukha/docsub/refs/heads/main/docs/badge/v1.json)](https://github.com/makukha/docsub)
 [![mypy](https://img.shields.io/badge/type_checked-mypy-%231674b1)](http://mypy.readthedocs.io)
