@@ -7,7 +7,7 @@ Directory
 .. autoclass:: dirlay.Dir
     :member-order: groupwise
     :members:
-    :special-members: __contains__, __eq__, __getitem__, __iter__, __or__, __ior__, __enter__, __exit__
+    :special-members: __contains__, __eq__, __getitem__, __floordiv__, __truediv__, __iter__, __or__, __ior__, __enter__, __exit__
 
 Node
 ----

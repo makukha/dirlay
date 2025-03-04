@@ -30,14 +30,14 @@ class DefaultTheme:
     content_box = ROUNDED
 
 
-def as_tree(layout, real_basedir=False, show_data=False, **kwargs):
+def as_rich_tree(tree, real_basedir=False, show_data=False, **kwargs):
     """
     Return :external+rich:py:obj:`~rich.tree.Tree` object representing
     the directory layout. See :ref:`Use cases` for examples.
 
     Args:
 
-        layout (`~dirlay.Dir`):
+        tree (`~dirlay.Dir`):
             Directory layout to be formatted.
 
         real_basedir (``bool``):
@@ -57,24 +57,22 @@ def as_tree(layout, real_basedir=False, show_data=False, **kwargs):
     """
     theme = DefaultTheme
 
-    def label(item, real_path=False):  # type: (Node, bool) -> str
-        icon_type = theme.icon_dir if item.is_dir else theme.icon_file
+    def label(item, real_path=False):  # type: (Node, bool, bool) -> str
+        icon_type = theme.icon_dir if item.isdir else theme.icon_file
         icon = '' if icon_type is None else '{} '.format(icon_type)
-        filename = item.path if real_path else (item.path.name or '.')
+        filename = item.abspath if real_path else (item.relpath.name or '.')
         return '{}{}'.format(icon, filename)
 
-    root = layout.root()
-    root.path = Path((layout.basedir or '.') if real_basedir else '.')
-    tree = Tree(label(root, real_path=real_basedir), **kwargs)
-    nodes = {'.': tree}
+    ret = Tree(label(tree.root(), real_path=real_basedir), **kwargs)
+    nodes = {'.': ret}
 
-    for item in sorted(list(layout.values()), key=lambda item: item.key):
+    for item in sorted(list(tree.values()), key=lambda item: item.key):
         node = (
             Group(label(item), Panel(item.data, theme.content_box, expand=False))
-            if show_data and not item.is_dir
+            if show_data and not item.isdir
             else label(item)
         )
         base = nodes[str(Path(item.key).parent)]
         nodes[item.key] = base.add(node)
 
-    return tree
+    return ret

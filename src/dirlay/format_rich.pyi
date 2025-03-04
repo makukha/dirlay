@@ -7,8 +7,8 @@ except ImportError:
 
 from dirlay import Dir
 
-def as_tree(
-    layout: Dir,
+def as_rich_tree(
+    tree: Dir,
     real_basedir: bool = ...,
     show_data: bool = ...,
     **kwargs: Any,
