@@ -4,7 +4,8 @@
 - Chdir to tree subdirectories
 - Display as rich tree for documentation
 - Developer friendly syntax:
-  - reference nodes by paths: `tree['a/b/c.md']`
+  - reference nodes by paths: `tree['a/b.md']`
+  - get sub-paths: `tree / 'a/b.md'` (relative), `tree // 'a/b.md'` (absolute)
   - add, update, delete nodes: `tree |= {'d': {}}`, `del tree['a']`
   - create tree under given or temporary directory
   - `contextmanager` interface to unlink tree on exit

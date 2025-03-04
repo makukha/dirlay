@@ -33,9 +33,9 @@ else:  # pragma: no cover
 
 
 if rich is not None:
-    from dirlay.format_rich import as_tree, rich_print
+    from dirlay.format_rich import as_rich_tree, rich_print
 else:  # pragma: no cover
-    as_tree = None
+    as_rich_tree = None
 
     def rich_print(*args):
         pass
@@ -65,30 +65,34 @@ class Node(object):
             >>> tree[tree['a/b.md'].key] == tree['a/b.md']
             True
 
-        path (`~pathlib.Path`):
-            Path of the node; if parent `Dir` is not created on the file system,
-            it is relative to parent `~dirlay.Dir.basedir` and matches
-            `~dirlay.Node.key`; otherwise it is an absolute path on the file system.
-
-        is_dir (``bool``):
-            Whether the node is a directory.
-
-        data (``str | dict[str, str | dict]``)
-            In-memory file content if the node is a file, or, if `~dirlay.Node.is_dir`
+        data (``str | dict[str, str | dict]``):
+            In-memory file content if the node is a file, or, if `~dirlay.Node.isdir`
             is ``True``, a dictionary, representing directory structure.
+
+        abspath (`~pathlib.Path` | ``None``):
+            Absolute node path, if directory layout is linked to the filesystem,
+            or ``None`` otherwise.
+
+        relpath (`~pathlib.Path`):
+            Node path relative to `~dirlay.Dir.basedir` of parent `~dirlay.Dir`;
+            corresponds to `~dirlay.Node.key`
+
+        isdir (``bool``):
+            Whether the node is a directory.
     """
 
-    def __init__(self, key, path, base):
+    def __init__(self, key, base, basedir):
         self.key = key
-        self.path = Path(path)
+        self.relpath = Path(key)
+        self.abspath = basedir / key if basedir is not None else None
         self._base = base
-        self._name = '.' if key == '.' else self.path.name
+        self._name = '.' if key == '.' else self.relpath.name
 
     def __eq__(self, other):
         return (
             isinstance(other, Node)
             and self.key == other.key
-            and self.path == other.path
+            and self.abspath == other.abspath
             and self._base is other._base
         )
 
@@ -101,7 +105,7 @@ class Node(object):
         self._base[self._name] = value
 
     @property
-    def is_dir(self):
+    def isdir(self):
         return isinstance(self.data, NestedDict.dict_class)
 
     def __repr__(self):
@@ -175,7 +179,25 @@ class Dir:
         base, name = self._tree.traverse(key)
         if name not in base:
             raise KeyError(key)
-        return Node(key, (self.basedir or Path()) / key, base=base)
+        return Node(key, base=base, basedir=self.basedir)
+
+    def __floordiv__(self, path):
+        """
+        Return absolute `~pathlib.Path` object for sub-path; equivalent to
+        ``tree[path].abspath``.
+
+        Directory layout must be linked to the file system.
+        """
+        self._require_linked_to_filesystem()
+        return self.__getitem__(path).abspath
+
+    def __truediv__(self, path):
+        """
+        Return relative `~pathlib.Path` object; equivalent to ``tree[path].relpath``.
+        """
+        return self.__getitem__(path).relpath
+
+    __div__ = __truediv__  # Python 2 compatibility
 
     def __iter__(self):
         """
@@ -191,7 +213,7 @@ class Dir:
         """
         for k in self._tree.keys():
             parent, _ = self._tree.traverse(k)
-            yield k, Node(k, (self.basedir or Path()) / k, base=parent)
+            yield k, Node(k, base=parent, basedir=self.basedir)
 
     def keys(self):
         """
@@ -209,13 +231,13 @@ class Dir:
         """
         Get root `~dirlay.Node` object.
         """
-        return Node('.', self.basedir or Path(), {'.': self._tree.data})
+        return Node('.', base={'.': self._tree.data}, basedir=self.basedir)
 
     def leaves(self):
         """
         Get all `~dirlay.Node` objects representing files or empty directories.
         """
-        return tuple(n for n in self.values() if not n.is_dir or n.data == {})
+        return tuple(n for n in self.values() if not n.isdir or n.data == {})
 
     def __or__(self, entries):
         """
@@ -309,15 +331,14 @@ class Dir:
             self._basedir = basedir.resolve()
         # create
         for node in self.leaves():
-            path = self._basedir / node.path
-            if node.is_dir:
-                path.mkdir(parents=True, exist_ok=True)
+            if node.isdir:
+                node.abspath.mkdir(parents=True, exist_ok=True)
             else:
-                path.parent.mkdir(parents=True, exist_ok=True)
+                node.abspath.parent.mkdir(parents=True, exist_ok=True)
                 if sys.version_info > (3,):
-                    path.write_text(node.data)
+                    node.abspath.write_text(node.data)
                 else:  # pragma: no cover
-                    path.write_text(node.data.decode('utf-8'))
+                    node.abspath.write_text(node.data.decode('utf-8'))
         # chdir
         if chdir not in (None, False):
             self.chdir('.' if chdir is True else chdir)
@@ -335,7 +356,7 @@ class Dir:
 
             ``None``
         """
-        self._assert_tree_created()
+        self._require_linked_to_filesystem()
         # chdir back if needed
         if self._original_cwd is not None:
             os.chdir(str(self._original_cwd))
@@ -368,24 +389,26 @@ class Dir:
             ValueError: If ``path`` is absolute.
         """
         # validate type
-        self._assert_tree_created()
+        self._require_linked_to_filesystem()
         if path is None:
             path = Path()
         elif isinstance(path, Path) or isinstance(path, str):
             path = Path(path)
         else:
-            raise TypeError('Path must be str or Path object')
+            raise TypeError('Required str or Path object')
         # assert relative
         if path.is_absolute():
-            raise ValueError('Absolute path not allowed: "{}"'.format(path))
+            raise ValueError('Absolute path not allowed')
         # chdir
         if self._original_cwd is None:
             self._original_cwd = getcwd()
         os.chdir(str(self.basedir / path))
 
-    def _assert_tree_created(self):
+    # helpers
+
+    def _require_linked_to_filesystem(self):
         if self._basedir is None:
-            raise RuntimeError('Directory tree must be created')
+            raise RuntimeError('Directory tree must be linked to filesystem')
 
     # formatting
 
@@ -414,7 +437,9 @@ class Dir:
         """
         if rich is None:
             raise NotImplementedError('Optional dependency required: dirlay[rich]')
-        return as_tree(self, real_basedir=real_basedir, show_data=show_data, **kwargs)
+        return as_rich_tree(
+            self, real_basedir=real_basedir, show_data=show_data, **kwargs
+        )
 
     def print_rich(self, real_basedir=False, show_data=False, **kwargs):
         """
